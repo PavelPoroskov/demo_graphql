@@ -1,0 +1,16 @@
+
+1) CRA 2, relay 17, graphcool-framework
+	data scheme: Hacker News
+	add network layer
+
+	auth github/google
+	
+2) without graphcool
+
+3) appolo client
+
+4) backend python
+
+
+data scheme:
+	author\posts

@@ -1,0 +1,16 @@
+**/node_modules
+**/semantic
+**/*.db
+#*.txt
+**/build*
+**/dist
+*/.gradle
+*/.idea
+cmdK.bat
+**/bundle.js
+**/bundle.map
+**/*.crt
+**/*.key
+**/*.pem
+**/*.jpeg
+**/*.jpg
