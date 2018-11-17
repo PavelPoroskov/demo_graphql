@@ -4,7 +4,9 @@
 	add network layer
 
 	auth github/google
-	
+
+	nested routing (relay.org/routing n*)
+
 2) without graphcool
 
 3) appolo client
