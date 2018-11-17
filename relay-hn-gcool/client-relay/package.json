@@ -5,11 +5,14 @@
   "dependencies": {
     "react": "^16.6.3",
     "react-dom": "^16.6.3",
+    "react-relay": "^1.7.0",
     "react-scripts": "2.1.1"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "compile-graphql": "relay-compiler --schema scripts/schema.graphql --src src",
+    "fetch-schema": "node scripts/fetch-schema.js",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -21,5 +24,10 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "devDependencies": {
+    "babel-plugin-relay": "^1.7.0",
+    "graphql": "^0.13.0",
+    "relay-compiler": "^1.7.0"
+  }
 }
