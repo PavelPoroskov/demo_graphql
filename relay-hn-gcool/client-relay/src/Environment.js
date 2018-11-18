@@ -4,16 +4,16 @@
  * to store records.
  */
 
-import { Environment, Network, RecordSource, Store } from "relay-runtime";
+import { Environment, Network, RecordSource, Store } from 'relay-runtime';
 
 async function fetchQuery(operation, variables) {
   const endpoint = process.env.REACT_APP_GRAPHQL_ENDPOINT
 
   const response = await fetch( endpoint, {
-    method: "POST",
+    method: 'POST',
     headers: {
       'Accept': 'application/json',
-      "Content-Type": "application/json"
+      'Content-Type': 'application/json'
     },
     body: JSON.stringify({
       query: operation.text,
