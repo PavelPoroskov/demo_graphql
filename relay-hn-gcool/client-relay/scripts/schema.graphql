@@ -160,10 +160,10 @@ type HelloPayload {
 
 type Link implements Node {
   url: String!
+  description: String
   id: ID!
   postedBy(filter: UserFilter): User
   votes(filter: VoteFilter, orderBy: VoteOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): VoteConnection
-  description: String
 }
 
 """A connection to a list of items."""
@@ -233,46 +233,6 @@ input LinkFilter {
 
   """All values not ending with the given string."""
   url_not_ends_with: String
-  id: ID
-
-  """All values that are not equal to given value."""
-  id_not: ID
-
-  """All values that are contained in given list."""
-  id_in: [ID!]
-
-  """All values that are not contained in given list."""
-  id_not_in: [ID!]
-
-  """All values less than the given value."""
-  id_lt: ID
-
-  """All values less than or equal the given value."""
-  id_lte: ID
-
-  """All values greater than the given value."""
-  id_gt: ID
-
-  """All values greater than or equal the given value."""
-  id_gte: ID
-
-  """All values containing the given string."""
-  id_contains: ID
-
-  """All values not containing the given string."""
-  id_not_contains: ID
-
-  """All values starting with the given string."""
-  id_starts_with: ID
-
-  """All values not starting with the given string."""
-  id_not_starts_with: ID
-
-  """All values ending with the given string."""
-  id_ends_with: ID
-
-  """All values not ending with the given string."""
-  id_not_ends_with: ID
   description: String
 
   """All values that are not equal to given value."""
@@ -313,6 +273,46 @@ input LinkFilter {
 
   """All values not ending with the given string."""
   description_not_ends_with: String
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
   postedBy: UserFilter
   votes_every: VoteFilter
   votes_some: VoteFilter
@@ -322,10 +322,10 @@ input LinkFilter {
 enum LinkOrderBy {
   url_ASC
   url_DESC
-  id_ASC
-  id_DESC
   description_ASC
   description_DESC
+  id_ASC
+  id_DESC
 }
 
 input LinkpostedByUser {
@@ -449,8 +449,8 @@ input SignupUserInput {
 
 input UpdateLink {
   url: String
-  id: ID!
   description: String
+  id: ID!
   postedById: ID
   postedBy: LinkpostedByUser
   votesIds: [ID!]
@@ -459,8 +459,8 @@ input UpdateLink {
 
 input UpdateLinkInput {
   url: String
-  id: ID!
   description: String
+  id: ID!
   postedById: ID
   postedBy: LinkpostedByUser
   votesIds: [ID!]

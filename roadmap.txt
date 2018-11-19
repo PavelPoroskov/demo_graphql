@@ -7,6 +7,16 @@
 
 	nested routing (relay.org/routing n*)
 
+	web-app in container
+
+	permissions 
+		table/model
+		rows
+		fields
+
+	roles
+		admin\ moderator\ user
+
 2) without graphcool
 
 3) appolo client

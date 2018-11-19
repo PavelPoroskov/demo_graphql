@@ -20,11 +20,16 @@ class LinkListPage extends Component {
           }
         `}
         render={({error, props}) => {
+
           if (error) {
+            console.log('QueryRenderer render: error')
             return <div>{error.message}</div>
           } else if (props) {
+            console.log('QueryRenderer render: props')
             return <LinkList viewer={props.viewer} />
           }
+          
+          console.log('QueryRenderer render: Loading')
           return <div>Loading</div>
         }}
       />
