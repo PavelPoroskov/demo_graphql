@@ -7,7 +7,7 @@ class CreateLink extends Component {
 
   state = {
     description: '',
-    url: ''
+    url: '',
   }
 
   render() {
@@ -47,7 +47,11 @@ class CreateLink extends Component {
       //this.props.relay.environment, 
       description, 
       url, 
-      () => console.log(`Mutation completed`)
+      () => {
+        console.log(`Mutation completed`)
+
+        this.props.history.push('/')
+      }
     )
   }
 }

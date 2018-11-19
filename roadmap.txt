@@ -5,7 +5,8 @@
 
 	auth github/google
 
-	nested routing (relay.org/routing n*)
+	nested routing (relay.org/routing found-relay)
+		complex form (e.g. user and his ip list)
 
 	web-app in container
 
@@ -23,6 +24,17 @@
 
 4) backend python
 
+)graphql and offline (PWA, Workbox)
+
+
 
 data scheme:
 	author\posts
+
+
+https://github.com/howtographql/howtographql/blob/master/content/frontend/react-relay/4-routing.md
+	'/create' & submit => '/''
+		reload list
+	'/create' & not_submit => '/''
+		reload list
+		?environment (network layer, use cache?)
