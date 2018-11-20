@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 01d6d32bc87b438956ae649183a8438c
+ * @relayHash c6877266968f35e9e741c2679bc53bab
  */
 
 /* eslint-disable */
@@ -10,8 +10,8 @@
 /*::
 import type { ConcreteRequest } from 'relay-runtime';
 export type CreateLinkInput = {
-  url: string,
   description?: ?string,
+  url: string,
   postedById?: ?string,
   postedBy?: ?LinkpostedByUser,
   votesIds?: ?$ReadOnlyArray<string>,
@@ -19,21 +19,17 @@ export type CreateLinkInput = {
   clientMutationId: string,
 };
 export type LinkpostedByUser = {
+  email: string,
   name: string,
-  votesIds?: ?$ReadOnlyArray<string>,
-  votes?: ?$ReadOnlyArray<UservotesVote>,
+  password: string,
   linksIds?: ?$ReadOnlyArray<string>,
   links?: ?$ReadOnlyArray<UserlinksLink>,
+  votesIds?: ?$ReadOnlyArray<string>,
+  votes?: ?$ReadOnlyArray<UservotesVote>,
 };
-export type UservotesVote = {
-  linkId?: ?string,
-  link?: ?VotelinkLink,
-};
-export type VotelinkLink = {
-  url: string,
+export type UserlinksLink = {
   description?: ?string,
-  postedById?: ?string,
-  postedBy?: ?LinkpostedByUser,
+  url: string,
   votesIds?: ?$ReadOnlyArray<string>,
   votes?: ?$ReadOnlyArray<LinkvotesVote>,
 };
@@ -42,15 +38,23 @@ export type LinkvotesVote = {
   user?: ?VoteuserUser,
 };
 export type VoteuserUser = {
+  email: string,
   name: string,
-  votesIds?: ?$ReadOnlyArray<string>,
-  votes?: ?$ReadOnlyArray<UservotesVote>,
+  password: string,
   linksIds?: ?$ReadOnlyArray<string>,
   links?: ?$ReadOnlyArray<UserlinksLink>,
+  votesIds?: ?$ReadOnlyArray<string>,
+  votes?: ?$ReadOnlyArray<UservotesVote>,
 };
-export type UserlinksLink = {
-  url: string,
+export type UservotesVote = {
+  linkId?: ?string,
+  link?: ?VotelinkLink,
+};
+export type VotelinkLink = {
   description?: ?string,
+  url: string,
+  postedById?: ?string,
+  postedBy?: ?LinkpostedByUser,
   votesIds?: ?$ReadOnlyArray<string>,
   votes?: ?$ReadOnlyArray<LinkvotesVote>,
 };
@@ -63,6 +67,10 @@ export type CreateLinkMutationResponse = {|
       +id: string,
       +url: string,
       +description: ?string,
+      +postedBy: ?{|
+        +id: string,
+        +name: string,
+      |},
     |}
   |}
 |};
@@ -82,6 +90,10 @@ mutation CreateLinkMutation(
       id
       url
       description
+      postedBy {
+        id
+        name
+      }
     }
   }
 }
@@ -96,7 +108,14 @@ var v0 = [
     "defaultValue": null
   }
 ],
-v1 = [
+v1 = {
+  "kind": "ScalarField",
+  "alias": null,
+  "name": "id",
+  "args": null,
+  "storageKey": null
+},
+v2 = [
   {
     "kind": "LinkedField",
     "alias": null,
@@ -122,13 +141,7 @@ v1 = [
         "concreteType": "Link",
         "plural": false,
         "selections": [
-          {
-            "kind": "ScalarField",
-            "alias": null,
-            "name": "id",
-            "args": null,
-            "storageKey": null
-          },
+          v1,
           {
             "kind": "ScalarField",
             "alias": null,
@@ -142,6 +155,25 @@ v1 = [
             "name": "description",
             "args": null,
             "storageKey": null
+          },
+          {
+            "kind": "LinkedField",
+            "alias": null,
+            "name": "postedBy",
+            "storageKey": null,
+            "args": null,
+            "concreteType": "User",
+            "plural": false,
+            "selections": [
+              v1,
+              {
+                "kind": "ScalarField",
+                "alias": null,
+                "name": "name",
+                "args": null,
+                "storageKey": null
+              }
+            ]
           }
         ]
       }
@@ -153,7 +185,7 @@ return {
   "operationKind": "mutation",
   "name": "CreateLinkMutation",
   "id": null,
-  "text": "mutation CreateLinkMutation(\n  $input: CreateLinkInput!\n) {\n  createLink(input: $input) {\n    link {\n      id\n      url\n      description\n    }\n  }\n}\n",
+  "text": "mutation CreateLinkMutation(\n  $input: CreateLinkInput!\n) {\n  createLink(input: $input) {\n    link {\n      id\n      url\n      description\n      postedBy {\n        id\n        name\n      }\n    }\n  }\n}\n",
   "metadata": {},
   "fragment": {
     "kind": "Fragment",
@@ -161,16 +193,16 @@ return {
     "type": "Mutation",
     "metadata": null,
     "argumentDefinitions": v0,
-    "selections": v1
+    "selections": v2
   },
   "operation": {
     "kind": "Operation",
     "name": "CreateLinkMutation",
     "argumentDefinitions": v0,
-    "selections": v1
+    "selections": v2
   }
 };
 })();
 // prettier-ignore
-(node/*: any*/).hash = '5953291b569fe2d16735abf92a51b70b';
+(node/*: any*/).hash = 'e87a5970e50ec1de488e91647ae8724b';
 module.exports = node;

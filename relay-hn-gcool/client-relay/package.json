@@ -12,8 +12,8 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "compile-graphql": "relay-compiler --schema scripts/schema.graphql --src src --watch",
-    "fetch-schema": "node scripts/fetch-schema.js",
+    "precompile-graphql": "node scripts/fetch-schema.js",
+    "compile-graphql": "relay-compiler --schema scripts/schema.graphql --src src",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

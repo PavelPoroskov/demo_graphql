@@ -43,9 +43,15 @@ type AddToVotesOnLinkPayload {
   votesVoteEdge: VoteEdge
 }
 
+"""AuthenticateUserPayload"""
+type AuthenticateUserPayload {
+  id: ID!
+  token: String!
+}
+
 input CreateLink {
-  url: String!
   description: String
+  url: String!
   postedById: ID
   postedBy: LinkpostedByUser
   votesIds: [ID!]
@@ -53,8 +59,8 @@ input CreateLink {
 }
 
 input CreateLinkInput {
-  url: String!
   description: String
+  url: String!
   postedById: ID
   postedBy: LinkpostedByUser
   votesIds: [ID!]
@@ -71,11 +77,13 @@ type CreateLinkPayload {
 }
 
 input CreateUser {
+  email: String!
   name: String!
-  votesIds: [ID!]
-  votes: [UservotesVote!]
+  password: String!
   linksIds: [ID!]
   links: [UserlinksLink!]
+  votesIds: [ID!]
+  votes: [UservotesVote!]
 }
 
 """
@@ -88,17 +96,17 @@ type CreateUserPayload {
 }
 
 input CreateVote {
-  userId: ID
-  user: VoteuserUser
   linkId: ID
   link: VotelinkLink
+  userId: ID
+  user: VoteuserUser
 }
 
 input CreateVoteInput {
-  userId: ID
-  user: VoteuserUser
   linkId: ID
   link: VotelinkLink
+  userId: ID
+  user: VoteuserUser
   clientMutationId: String!
 }
 
@@ -107,9 +115,11 @@ type CreateVotePayload {
   clientMutationId: String!
   vote: Vote
   edge: VoteEdge
-  user: User
   link: Link
+  user: User
 }
+
+scalar DateTime
 
 input DeleteLinkInput {
   id: ID!
@@ -148,21 +158,16 @@ type DeleteVotePayload {
   clientMutationId: String!
   vote: Vote
   edge: VoteEdge
-  user: User
   link: Link
+  user: User
   deletedId: ID
 }
 
-"""HelloPayload"""
-type HelloPayload {
-  message: String!
-}
-
 type Link implements Node {
-  url: String!
   description: String
   id: ID!
   postedBy(filter: UserFilter): User
+  url: String!
   votes(filter: VoteFilter, orderBy: VoteOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): VoteConnection
 }
 
@@ -193,46 +198,6 @@ input LinkFilter {
 
   """Logical OR on all given filters."""
   OR: [LinkFilter!]
-  url: String
-
-  """All values that are not equal to given value."""
-  url_not: String
-
-  """All values that are contained in given list."""
-  url_in: [String!]
-
-  """All values that are not contained in given list."""
-  url_not_in: [String!]
-
-  """All values less than the given value."""
-  url_lt: String
-
-  """All values less than or equal the given value."""
-  url_lte: String
-
-  """All values greater than the given value."""
-  url_gt: String
-
-  """All values greater than or equal the given value."""
-  url_gte: String
-
-  """All values containing the given string."""
-  url_contains: String
-
-  """All values not containing the given string."""
-  url_not_contains: String
-
-  """All values starting with the given string."""
-  url_starts_with: String
-
-  """All values not starting with the given string."""
-  url_not_starts_with: String
-
-  """All values ending with the given string."""
-  url_ends_with: String
-
-  """All values not ending with the given string."""
-  url_not_ends_with: String
   description: String
 
   """All values that are not equal to given value."""
@@ -313,6 +278,46 @@ input LinkFilter {
 
   """All values not ending with the given string."""
   id_not_ends_with: ID
+  url: String
+
+  """All values that are not equal to given value."""
+  url_not: String
+
+  """All values that are contained in given list."""
+  url_in: [String!]
+
+  """All values that are not contained in given list."""
+  url_not_in: [String!]
+
+  """All values less than the given value."""
+  url_lt: String
+
+  """All values less than or equal the given value."""
+  url_lte: String
+
+  """All values greater than the given value."""
+  url_gt: String
+
+  """All values greater than or equal the given value."""
+  url_gte: String
+
+  """All values containing the given string."""
+  url_contains: String
+
+  """All values not containing the given string."""
+  url_not_contains: String
+
+  """All values starting with the given string."""
+  url_starts_with: String
+
+  """All values not starting with the given string."""
+  url_not_starts_with: String
+
+  """All values ending with the given string."""
+  url_ends_with: String
+
+  """All values not ending with the given string."""
+  url_not_ends_with: String
   postedBy: UserFilter
   votes_every: VoteFilter
   votes_some: VoteFilter
@@ -320,25 +325,32 @@ input LinkFilter {
 }
 
 enum LinkOrderBy {
-  url_ASC
-  url_DESC
   description_ASC
   description_DESC
   id_ASC
   id_DESC
+  url_ASC
+  url_DESC
 }
 
 input LinkpostedByUser {
+  email: String!
   name: String!
-  votesIds: [ID!]
-  votes: [UservotesVote!]
+  password: String!
   linksIds: [ID!]
   links: [UserlinksLink!]
+  votesIds: [ID!]
+  votes: [UservotesVote!]
 }
 
 input LinkvotesVote {
   userId: ID
   user: VoteuserUser
+}
+
+"""LoggedInUserPayload"""
+type LoggedInUserPayload {
+  id: ID!
 }
 
 type Mutation {
@@ -360,6 +372,12 @@ type Mutation {
   removeFromUsersLinks(input: RemoveFromUsersLinksUserInput!): RemoveFromUsersLinksPayload
   removeFromVotesOnLink(input: RemoveFromVotesOnLinkLinkInput!): RemoveFromVotesOnLinkPayload
   createUser(input: SignupUserInput!): CreateUserPayload!
+
+  """authenticate"""
+  authenticateUser(email: String!, password: String!): AuthenticateUserPayload
+
+  """signup"""
+  signupUser(email: String!, password: String!, name: String): SignupUserPayload
 }
 
 """An object with an ID"""
@@ -439,18 +457,26 @@ type RemoveFromVotesOnLinkPayload {
 }
 
 input SignupUserInput {
+  email: String!
   name: String!
-  votesIds: [ID!]
-  votes: [UservotesVote!]
+  password: String!
   linksIds: [ID!]
   links: [UserlinksLink!]
+  votesIds: [ID!]
+  votes: [UservotesVote!]
   clientMutationId: String!
 }
 
+"""SignupUserPayload"""
+type SignupUserPayload {
+  id: ID!
+  token: String!
+}
+
 input UpdateLink {
-  url: String
   description: String
   id: ID!
+  url: String
   postedById: ID
   postedBy: LinkpostedByUser
   votesIds: [ID!]
@@ -458,9 +484,9 @@ input UpdateLink {
 }
 
 input UpdateLinkInput {
-  url: String
   description: String
   id: ID!
+  url: String
   postedById: ID
   postedBy: LinkpostedByUser
   votesIds: [ID!]
@@ -514,26 +540,30 @@ type UpdateOrCreateVotePayload {
   clientMutationId: String!
   vote: Vote
   edge: VoteEdge
-  user: User
   link: Link
+  user: User
 }
 
 input UpdateUser {
-  name: String
+  email: String
   id: ID!
-  votesIds: [ID!]
-  votes: [UservotesVote!]
+  name: String
+  password: String
   linksIds: [ID!]
   links: [UserlinksLink!]
+  votesIds: [ID!]
+  votes: [UservotesVote!]
 }
 
 input UpdateUserInput {
-  name: String
+  email: String
   id: ID!
-  votesIds: [ID!]
-  votes: [UservotesVote!]
+  name: String
+  password: String
   linksIds: [ID!]
   links: [UserlinksLink!]
+  votesIds: [ID!]
+  votes: [UservotesVote!]
   clientMutationId: String!
 }
 
@@ -546,18 +576,18 @@ type UpdateUserPayload {
 
 input UpdateVote {
   id: ID!
-  userId: ID
-  user: VoteuserUser
   linkId: ID
   link: VotelinkLink
+  userId: ID
+  user: VoteuserUser
 }
 
 input UpdateVoteInput {
   id: ID!
-  userId: ID
-  user: VoteuserUser
   linkId: ID
   link: VotelinkLink
+  userId: ID
+  user: VoteuserUser
   clientMutationId: String!
 }
 
@@ -566,15 +596,19 @@ type UpdateVotePayload {
   clientMutationId: String!
   vote: Vote
   edge: VoteEdge
-  user: User
   link: Link
+  user: User
 }
 
 type User implements Node {
-  name: String!
+  createdAt: DateTime!
+  email: String!
   id: ID!
-  votes(filter: VoteFilter, orderBy: VoteOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): VoteConnection
   links(filter: LinkFilter, orderBy: LinkOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): LinkConnection
+  name: String!
+  password: String!
+  updatedAt: DateTime!
+  votes(filter: VoteFilter, orderBy: VoteOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): VoteConnection
 }
 
 """A connection to a list of items."""
@@ -604,46 +638,68 @@ input UserFilter {
 
   """Logical OR on all given filters."""
   OR: [UserFilter!]
-  name: String
+  createdAt: DateTime
 
   """All values that are not equal to given value."""
-  name_not: String
+  createdAt_not: DateTime
 
   """All values that are contained in given list."""
-  name_in: [String!]
+  createdAt_in: [DateTime!]
 
   """All values that are not contained in given list."""
-  name_not_in: [String!]
+  createdAt_not_in: [DateTime!]
 
   """All values less than the given value."""
-  name_lt: String
+  createdAt_lt: DateTime
 
   """All values less than or equal the given value."""
-  name_lte: String
+  createdAt_lte: DateTime
 
   """All values greater than the given value."""
-  name_gt: String
+  createdAt_gt: DateTime
 
   """All values greater than or equal the given value."""
-  name_gte: String
+  createdAt_gte: DateTime
+  email: String
+
+  """All values that are not equal to given value."""
+  email_not: String
+
+  """All values that are contained in given list."""
+  email_in: [String!]
+
+  """All values that are not contained in given list."""
+  email_not_in: [String!]
+
+  """All values less than the given value."""
+  email_lt: String
+
+  """All values less than or equal the given value."""
+  email_lte: String
+
+  """All values greater than the given value."""
+  email_gt: String
+
+  """All values greater than or equal the given value."""
+  email_gte: String
 
   """All values containing the given string."""
-  name_contains: String
+  email_contains: String
 
   """All values not containing the given string."""
-  name_not_contains: String
+  email_not_contains: String
 
   """All values starting with the given string."""
-  name_starts_with: String
+  email_starts_with: String
 
   """All values not starting with the given string."""
-  name_not_starts_with: String
+  email_not_starts_with: String
 
   """All values ending with the given string."""
-  name_ends_with: String
+  email_ends_with: String
 
   """All values not ending with the given string."""
-  name_not_ends_with: String
+  email_not_ends_with: String
   id: ID
 
   """All values that are not equal to given value."""
@@ -684,26 +740,136 @@ input UserFilter {
 
   """All values not ending with the given string."""
   id_not_ends_with: ID
-  votes_every: VoteFilter
-  votes_some: VoteFilter
-  votes_none: VoteFilter
+  name: String
+
+  """All values that are not equal to given value."""
+  name_not: String
+
+  """All values that are contained in given list."""
+  name_in: [String!]
+
+  """All values that are not contained in given list."""
+  name_not_in: [String!]
+
+  """All values less than the given value."""
+  name_lt: String
+
+  """All values less than or equal the given value."""
+  name_lte: String
+
+  """All values greater than the given value."""
+  name_gt: String
+
+  """All values greater than or equal the given value."""
+  name_gte: String
+
+  """All values containing the given string."""
+  name_contains: String
+
+  """All values not containing the given string."""
+  name_not_contains: String
+
+  """All values starting with the given string."""
+  name_starts_with: String
+
+  """All values not starting with the given string."""
+  name_not_starts_with: String
+
+  """All values ending with the given string."""
+  name_ends_with: String
+
+  """All values not ending with the given string."""
+  name_not_ends_with: String
+  password: String
+
+  """All values that are not equal to given value."""
+  password_not: String
+
+  """All values that are contained in given list."""
+  password_in: [String!]
+
+  """All values that are not contained in given list."""
+  password_not_in: [String!]
+
+  """All values less than the given value."""
+  password_lt: String
+
+  """All values less than or equal the given value."""
+  password_lte: String
+
+  """All values greater than the given value."""
+  password_gt: String
+
+  """All values greater than or equal the given value."""
+  password_gte: String
+
+  """All values containing the given string."""
+  password_contains: String
+
+  """All values not containing the given string."""
+  password_not_contains: String
+
+  """All values starting with the given string."""
+  password_starts_with: String
+
+  """All values not starting with the given string."""
+  password_not_starts_with: String
+
+  """All values ending with the given string."""
+  password_ends_with: String
+
+  """All values not ending with the given string."""
+  password_not_ends_with: String
+  updatedAt: DateTime
+
+  """All values that are not equal to given value."""
+  updatedAt_not: DateTime
+
+  """All values that are contained in given list."""
+  updatedAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  updatedAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  updatedAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  updatedAt_lte: DateTime
+
+  """All values greater than the given value."""
+  updatedAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  updatedAt_gte: DateTime
   links_every: LinkFilter
   links_some: LinkFilter
   links_none: LinkFilter
+  votes_every: VoteFilter
+  votes_some: VoteFilter
+  votes_none: VoteFilter
 }
 
 input UserlinksLink {
-  url: String!
   description: String
+  url: String!
   votesIds: [ID!]
   votes: [LinkvotesVote!]
 }
 
 enum UserOrderBy {
-  name_ASC
-  name_DESC
+  createdAt_ASC
+  createdAt_DESC
+  email_ASC
+  email_DESC
   id_ASC
   id_DESC
+  name_ASC
+  name_DESC
+  password_ASC
+  password_DESC
+  updatedAt_ASC
+  updatedAt_DESC
 }
 
 input UservotesVote {
@@ -717,19 +883,19 @@ type Viewer {
   allLinks(filter: LinkFilter, orderBy: LinkOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): LinkConnection!
   allVotes(filter: VoteFilter, orderBy: VoteOrderBy, skip: Int, after: String, before: String, first: Int, last: Int): VoteConnection!
   user: User
-  User(id: ID): User
+  User(email: String, id: ID): User
   Link(id: ID): Link
   Vote(id: ID): Vote
 
-  """hello"""
-  hello(name: String): HelloPayload
+  """loggedInUser"""
+  loggedInUser: LoggedInUserPayload
   id: ID!
 }
 
 type Vote implements Node {
   id: ID!
-  user(filter: UserFilter): User
   link(filter: LinkFilter): Link
+  user(filter: UserFilter): User
 }
 
 """A connection to a list of items."""
@@ -799,13 +965,13 @@ input VoteFilter {
 
   """All values not ending with the given string."""
   id_not_ends_with: ID
-  user: UserFilter
   link: LinkFilter
+  user: UserFilter
 }
 
 input VotelinkLink {
-  url: String!
   description: String
+  url: String!
   postedById: ID
   postedBy: LinkpostedByUser
   votesIds: [ID!]
@@ -818,9 +984,11 @@ enum VoteOrderBy {
 }
 
 input VoteuserUser {
+  email: String!
   name: String!
-  votesIds: [ID!]
-  votes: [UservotesVote!]
+  password: String!
   linksIds: [ID!]
   links: [UserlinksLink!]
+  votesIds: [ID!]
+  votes: [UservotesVote!]
 }

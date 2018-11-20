@@ -1,6 +1,7 @@
 // 1
 import { commitMutation } from 'react-relay'
-import graphql from "babel-plugin-relay/macro";
+import graphql from "babel-plugin-relay/macro"
+
 import environment from '../Environment'
 
 // 2
@@ -12,6 +13,10 @@ const mutation = graphql`
         id
         url
         description
+        postedBy {
+          id
+          name
+        }
       }
     }
   }
@@ -19,10 +24,11 @@ const mutation = graphql`
 
 // 3
 //const commit = (environment, description, url, callback) => {
-const commit = ( description, url, callback) => {
+const commit = ( postedById, description, url, callback) => {
   // 4
   const variables = {
     input: {
+      postedById,
       description,
       url,
       clientMutationId: ""
