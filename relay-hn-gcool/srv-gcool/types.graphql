@@ -41,6 +41,7 @@ type Link @model {
   description: String
   postedBy: User @relation(name: "UsersLinks")
   votes: [Vote!]! @relation(name: "VotesOnLink")
+  createdAt: DateTime! # read-only (managed by Graphcool)
 }
 
 type Vote @model {

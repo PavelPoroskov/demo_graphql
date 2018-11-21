@@ -164,6 +164,7 @@ type DeleteVotePayload {
 }
 
 type Link implements Node {
+  createdAt: DateTime!
   description: String
   id: ID!
   postedBy(filter: UserFilter): User
@@ -198,6 +199,28 @@ input LinkFilter {
 
   """Logical OR on all given filters."""
   OR: [LinkFilter!]
+  createdAt: DateTime
+
+  """All values that are not equal to given value."""
+  createdAt_not: DateTime
+
+  """All values that are contained in given list."""
+  createdAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  createdAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  createdAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  createdAt_lte: DateTime
+
+  """All values greater than the given value."""
+  createdAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  createdAt_gte: DateTime
   description: String
 
   """All values that are not equal to given value."""
@@ -325,6 +348,8 @@ input LinkFilter {
 }
 
 enum LinkOrderBy {
+  createdAt_ASC
+  createdAt_DESC
   description_ASC
   description_DESC
   id_ASC

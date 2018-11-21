@@ -10,6 +10,8 @@ import Login from '../Login'
 export default
 class App extends Component {
   render() {
+    //console.log('App render')
+
     return (
       <BrowserRouter> 
         <div className='center w85'>

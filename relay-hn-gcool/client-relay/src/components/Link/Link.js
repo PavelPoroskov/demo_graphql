@@ -11,6 +11,14 @@ export default createFragmentContainer(
       id
       description
       url
+      createdAt
+      postedBy {
+        id
+        name
+      }      
+      votes {
+          count
+      }      
     }
   `
 );

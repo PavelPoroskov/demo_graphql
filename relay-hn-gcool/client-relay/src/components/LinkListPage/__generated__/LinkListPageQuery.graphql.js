@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 6e93cec28b382871a5b0491e2d4a22d3
+ * @relayHash 8e4f0a3c9b7e51e907649ad72fad2dfd
  */
 
 /* eslint-disable */
@@ -52,6 +52,14 @@ fragment Link_link on Link {
   id
   description
   url
+  createdAt
+  postedBy {
+    id
+    name
+  }
+  votes {
+    count
+  }
 }
 */
 
@@ -82,7 +90,7 @@ return {
   "operationKind": "query",
   "name": "LinkListPageQuery",
   "id": null,
-  "text": "query LinkListPageQuery {\n  viewer {\n    ...LinkList_viewer\n    id\n  }\n}\n\nfragment LinkList_viewer on Viewer {\n  allLinks(last: 100, orderBy: id_ASC) {\n    edges {\n      node {\n        ...Link_link\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      hasPreviousPage\n      startCursor\n    }\n  }\n}\n\nfragment Link_link on Link {\n  id\n  description\n  url\n}\n",
+  "text": "query LinkListPageQuery {\n  viewer {\n    ...LinkList_viewer\n    id\n  }\n}\n\nfragment LinkList_viewer on Viewer {\n  allLinks(last: 100, orderBy: id_ASC) {\n    edges {\n      node {\n        ...Link_link\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      hasPreviousPage\n      startCursor\n    }\n  }\n}\n\nfragment Link_link on Link {\n  id\n  description\n  url\n  createdAt\n  postedBy {\n    id\n    name\n  }\n  votes {\n    count\n  }\n}\n",
   "metadata": {},
   "fragment": {
     "kind": "Fragment",
@@ -164,6 +172,50 @@ return {
                         "name": "url",
                         "args": null,
                         "storageKey": null
+                      },
+                      {
+                        "kind": "ScalarField",
+                        "alias": null,
+                        "name": "createdAt",
+                        "args": null,
+                        "storageKey": null
+                      },
+                      {
+                        "kind": "LinkedField",
+                        "alias": null,
+                        "name": "postedBy",
+                        "storageKey": null,
+                        "args": null,
+                        "concreteType": "User",
+                        "plural": false,
+                        "selections": [
+                          v1,
+                          {
+                            "kind": "ScalarField",
+                            "alias": null,
+                            "name": "name",
+                            "args": null,
+                            "storageKey": null
+                          }
+                        ]
+                      },
+                      {
+                        "kind": "LinkedField",
+                        "alias": null,
+                        "name": "votes",
+                        "storageKey": null,
+                        "args": null,
+                        "concreteType": "VoteConnection",
+                        "plural": false,
+                        "selections": [
+                          {
+                            "kind": "ScalarField",
+                            "alias": null,
+                            "name": "count",
+                            "args": null,
+                            "storageKey": null
+                          }
+                        ]
                       },
                       {
                         "kind": "ScalarField",

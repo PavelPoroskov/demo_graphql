@@ -7,6 +7,8 @@ import { GC_USER_ID, GC_AUTH_TOKEN } from '../../constants'
 class Header extends Component {
 
   render() {
+    //console.log('Header render withRouter()')
+
     const userId = localStorage.getItem(GC_USER_ID)
     return (
       <div className='flex pa1 justify-between nowrap orange'>
