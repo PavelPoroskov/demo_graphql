@@ -8,6 +8,9 @@ import LinkList from '../LinkList'
 export default
 class LinkListPage extends Component {
 
+  //dataFrom = 'NETWORK_ONLY'
+  dataFrom = 'STORE_THEN_NETWORK'
+
   render() {
     return (
       <QueryRenderer
@@ -32,6 +35,7 @@ class LinkListPage extends Component {
           console.log('QueryRenderer render: Loading')
           return <div>Loading</div>
         }}
+        dataFrom={this.dataFrom}
       />
     )
   }

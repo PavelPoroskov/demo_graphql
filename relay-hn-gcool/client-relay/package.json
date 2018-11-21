@@ -7,12 +7,13 @@
     "react-dom": "^16.6.3",
     "react-relay": "^1.7.0",
     "react-router-dom": "^4.3.1",
-    "react-scripts": "2.1.1"
+    "react-scripts": "2.1.1",
+    "subscriptions-transport-ws": "^0.9.15"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "precompile-graphql": "node scripts/fetch-schema.js",
+    "pre-compile-graphql": "node scripts/fetch-schema.js",
     "compile-graphql": "relay-compiler --schema scripts/schema.graphql --src src",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

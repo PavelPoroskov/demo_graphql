@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 
 import Link from '../Link'
 import { GC_USER_ID } from '../../constants'
-
+import NewVoteSubscription from '../../subscriptions/NewVoteSubscription'
 
 export default
 class LinkList extends Component {
@@ -18,5 +18,7 @@ class LinkList extends Component {
       </div>
     )
   }
-
+  componentDidMount() {
+    NewVoteSubscription.commit()
+  }
 }
