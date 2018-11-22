@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 8e4f0a3c9b7e51e907649ad72fad2dfd
+ * @relayHash 974743d51169f6d5449a25289ec9d08a
  */
 
 /* eslint-disable */
@@ -10,7 +10,10 @@
 /*::
 import type { ConcreteRequest } from 'relay-runtime';
 type LinkList_viewer$ref = any;
-export type LinkListPageQueryVariables = {||};
+export type LinkListPageQueryVariables = {|
+  count: number,
+  after?: ?string,
+|};
 export type LinkListPageQueryResponse = {|
   +viewer: {|
     +$fragmentRefs: LinkList_viewer$ref
@@ -24,15 +27,18 @@ export type LinkListPageQuery = {|
 
 
 /*
-query LinkListPageQuery {
+query LinkListPageQuery(
+  $count: Int!
+  $after: String
+) {
   viewer {
-    ...LinkList_viewer
+    ...LinkList_viewer_2QE1um
     id
   }
 }
 
-fragment LinkList_viewer on Viewer {
-  allLinks(last: 100, orderBy: id_ASC) {
+fragment LinkList_viewer_2QE1um on Viewer {
+  allLinks(first: $count, after: $after, orderBy: createdAt_ASC) {
     edges {
       node {
         ...Link_link
@@ -42,8 +48,8 @@ fragment LinkList_viewer on Viewer {
       cursor
     }
     pageInfo {
-      hasPreviousPage
-      startCursor
+      hasNextPage
+      endCursor
     }
   }
 }
@@ -66,19 +72,39 @@ fragment Link_link on Link {
 const node/*: ConcreteRequest*/ = (function(){
 var v0 = [
   {
-    "kind": "Literal",
-    "name": "last",
-    "value": 100,
+    "kind": "LocalArgument",
+    "name": "count",
+    "type": "Int!",
+    "defaultValue": null
+  },
+  {
+    "kind": "LocalArgument",
+    "name": "after",
+    "type": "String",
+    "defaultValue": null
+  }
+],
+v1 = [
+  {
+    "kind": "Variable",
+    "name": "after",
+    "variableName": "after",
+    "type": "String"
+  },
+  {
+    "kind": "Variable",
+    "name": "first",
+    "variableName": "count",
     "type": "Int"
   },
   {
     "kind": "Literal",
     "name": "orderBy",
-    "value": "id_ASC",
+    "value": "createdAt_ASC",
     "type": "LinkOrderBy"
   }
 ],
-v1 = {
+v2 = {
   "kind": "ScalarField",
   "alias": null,
   "name": "id",
@@ -90,14 +116,14 @@ return {
   "operationKind": "query",
   "name": "LinkListPageQuery",
   "id": null,
-  "text": "query LinkListPageQuery {\n  viewer {\n    ...LinkList_viewer\n    id\n  }\n}\n\nfragment LinkList_viewer on Viewer {\n  allLinks(last: 100, orderBy: id_ASC) {\n    edges {\n      node {\n        ...Link_link\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      hasPreviousPage\n      startCursor\n    }\n  }\n}\n\nfragment Link_link on Link {\n  id\n  description\n  url\n  createdAt\n  postedBy {\n    id\n    name\n  }\n  votes {\n    count\n  }\n}\n",
+  "text": "query LinkListPageQuery(\n  $count: Int!\n  $after: String\n) {\n  viewer {\n    ...LinkList_viewer_2QE1um\n    id\n  }\n}\n\nfragment LinkList_viewer_2QE1um on Viewer {\n  allLinks(first: $count, after: $after, orderBy: createdAt_ASC) {\n    edges {\n      node {\n        ...Link_link\n        id\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      hasNextPage\n      endCursor\n    }\n  }\n}\n\nfragment Link_link on Link {\n  id\n  description\n  url\n  createdAt\n  postedBy {\n    id\n    name\n  }\n  votes {\n    count\n  }\n}\n",
   "metadata": {},
   "fragment": {
     "kind": "Fragment",
     "name": "LinkListPageQuery",
     "type": "Query",
     "metadata": null,
-    "argumentDefinitions": [],
+    "argumentDefinitions": v0,
     "selections": [
       {
         "kind": "LinkedField",
@@ -111,7 +137,20 @@ return {
           {
             "kind": "FragmentSpread",
             "name": "LinkList_viewer",
-            "args": null
+            "args": [
+              {
+                "kind": "Variable",
+                "name": "after",
+                "variableName": "after",
+                "type": null
+              },
+              {
+                "kind": "Variable",
+                "name": "count",
+                "variableName": "count",
+                "type": null
+              }
+            ]
           }
         ]
       }
@@ -120,7 +159,7 @@ return {
   "operation": {
     "kind": "Operation",
     "name": "LinkListPageQuery",
-    "argumentDefinitions": [],
+    "argumentDefinitions": v0,
     "selections": [
       {
         "kind": "LinkedField",
@@ -135,8 +174,8 @@ return {
             "kind": "LinkedField",
             "alias": null,
             "name": "allLinks",
-            "storageKey": "allLinks(last:100,orderBy:\"id_ASC\")",
-            "args": v0,
+            "storageKey": null,
+            "args": v1,
             "concreteType": "LinkConnection",
             "plural": false,
             "selections": [
@@ -158,7 +197,7 @@ return {
                     "concreteType": "Link",
                     "plural": false,
                     "selections": [
-                      v1,
+                      v2,
                       {
                         "kind": "ScalarField",
                         "alias": null,
@@ -189,7 +228,7 @@ return {
                         "concreteType": "User",
                         "plural": false,
                         "selections": [
-                          v1,
+                          v2,
                           {
                             "kind": "ScalarField",
                             "alias": null,
@@ -247,14 +286,14 @@ return {
                   {
                     "kind": "ScalarField",
                     "alias": null,
-                    "name": "hasPreviousPage",
+                    "name": "hasNextPage",
                     "args": null,
                     "storageKey": null
                   },
                   {
                     "kind": "ScalarField",
                     "alias": null,
-                    "name": "startCursor",
+                    "name": "endCursor",
                     "args": null,
                     "storageKey": null
                   }
@@ -266,12 +305,14 @@ return {
             "kind": "LinkedHandle",
             "alias": null,
             "name": "allLinks",
-            "args": v0,
+            "args": v1,
             "handle": "connection",
             "key": "LinkList_allLinks",
-            "filters": []
+            "filters": [
+              "orderBy"
+            ]
           },
-          v1
+          v2
         ]
       }
     ]
@@ -279,5 +320,5 @@ return {
 };
 })();
 // prettier-ignore
-(node/*: any*/).hash = '2c2833bffc47f6918a457dc5fe6b01ca';
+(node/*: any*/).hash = '1d2b272417d870ae67bf2087c79b2cae';
 module.exports = node;

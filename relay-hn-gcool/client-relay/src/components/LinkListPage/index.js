@@ -4,24 +4,34 @@ import graphql from "babel-plugin-relay/macro";
 import environment from '../../Environment'
 
 import LinkList from '../LinkList'
+import { ITEMS_PER_PAGE } from '../../constants'
 
 export default
 class LinkListPage extends Component {
 
-  //dataFrom = 'NETWORK_ONLY'
-  dataFrom = 'STORE_THEN_NETWORK'
+  // dataFrom = 'NETWORK_ONLY' // default
+  // //dataFrom = 'STORE_THEN_NETWORK'
+  //       dataFrom={this.dataFrom}
+  //     />
+
+  variables = { count: ITEMS_PER_PAGE }
 
   render() {
+
     return (
       <QueryRenderer
         environment={environment}
         query={graphql`
-          query LinkListPageQuery {
+          query LinkListPageQuery (
+            $count: Int!,
+            $after: String
+          ){
             viewer {
-              ...LinkList_viewer
+              ...LinkList_viewer @arguments(count: $count, after: $after)
             }
           }
         `}
+        variables={this.variables}
         render={({error, props}) => {
 
           if (error) {
@@ -35,7 +45,6 @@ class LinkListPage extends Component {
           console.log('QueryRenderer render: Loading')
           return <div>Loading</div>
         }}
-        dataFrom={this.dataFrom}
       />
     )
   }

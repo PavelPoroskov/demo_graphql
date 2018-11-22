@@ -17,7 +17,11 @@ export type LinkList_viewer = {|
       +node: {|
         +$fragmentRefs: Link_link$ref
       |}
-    |}>
+    |}>,
+    +pageInfo: {|
+      +hasNextPage: boolean,
+      +endCursor: ?string,
+    |},
   |},
   +$refType: LinkList_viewer$ref,
 |};
@@ -31,23 +35,43 @@ const node/*: ConcreteFragment*/ = {
   "metadata": {
     "connection": [
       {
-        "count": null,
-        "cursor": null,
-        "direction": "backward",
+        "count": "count",
+        "cursor": "after",
+        "direction": "forward",
         "path": [
           "allLinks"
         ]
       }
     ]
   },
-  "argumentDefinitions": [],
+  "argumentDefinitions": [
+    {
+      "kind": "LocalArgument",
+      "name": "count",
+      "type": "Int!",
+      "defaultValue": null
+    },
+    {
+      "kind": "LocalArgument",
+      "name": "after",
+      "type": "String",
+      "defaultValue": null
+    }
+  ],
   "selections": [
     {
       "kind": "LinkedField",
       "alias": "allLinks",
       "name": "__LinkList_allLinks_connection",
-      "storageKey": null,
-      "args": null,
+      "storageKey": "__LinkList_allLinks_connection(orderBy:\"createdAt_ASC\")",
+      "args": [
+        {
+          "kind": "Literal",
+          "name": "orderBy",
+          "value": "createdAt_ASC",
+          "type": "LinkOrderBy"
+        }
+      ],
       "concreteType": "LinkConnection",
       "plural": false,
       "selections": [
@@ -104,14 +128,14 @@ const node/*: ConcreteFragment*/ = {
             {
               "kind": "ScalarField",
               "alias": null,
-              "name": "hasPreviousPage",
+              "name": "hasNextPage",
               "args": null,
               "storageKey": null
             },
             {
               "kind": "ScalarField",
               "alias": null,
-              "name": "startCursor",
+              "name": "endCursor",
               "args": null,
               "storageKey": null
             }
@@ -122,5 +146,5 @@ const node/*: ConcreteFragment*/ = {
   ]
 };
 // prettier-ignore
-(node/*: any*/).hash = 'cede0765942c7238fcc1d94d1d694e63';
+(node/*: any*/).hash = 'c199667f94c36096a1a78b22a065cd0e';
 module.exports = node;

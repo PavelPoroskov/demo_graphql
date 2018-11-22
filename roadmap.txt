@@ -38,3 +38,57 @@ https://github.com/howtographql/howtographql/blob/master/content/frontend/react-
 	'/create' & not_submit => '/''
 		reload list
 		?environment (network layer, use cache?)
+
+https://github.com/howtographql/howtographql/blob/master/content/frontend/react-relay/5-authentication.md
+	graphql-mutation: one paramter or some
+	signup/login retrun: {id, token} or {user,token}
+		signup/login retrun one type 
+	user.name! or user.name
+	
+	jack@test.com 1
+
+	add react-router PrivateRoute
+
+	non-authenticated
+		view list
+		login
+		signup
+	authenticated and 
+		create link
+
+	error processing
+		user: email not uniq
+
+https://github.com/howtographql/howtographql/blob/master/content/frontend/react-relay/6-more-mutations-and-updating-the-store.md
+	const userId = localStorage.getItem(GC_USER_ID)  // async may be or worse( sync with blocking)
+	in every subcomponent
+
+	.get one time in parent(LinkList) and give children subcomponent
+
+	author cant vote for own post
+	test canUserVote 
+		on backend) client send vote, backend send if can, then vote
+		before) backen send LinkList [Link] with field IDidVote: true/false
+
+https://github.com/howtographql/howtographql/blob/master/content/frontend/react-relay/8-pagination.md
+	1) '/create' & submit => '/''
+		reload list
+	2) '/create' & not_submit => '/''
+		reload list
+		?environment (network layer, use cache?)
+	:change stragy for 1)-> network load 2) use cache 3) ...
+
+
+	strategy for devide Relay_container and React_view_component
+		1) pass relay.mutations to React_view_component
+			this.props.relay.environment -> mutation
+		2) pass this.props.viewer.allLinks.edges.map to React_view_component (this.props.allLinks) 
+
+		use simple translate/map_component with recompose()/reselect
+
+	forward and backward pagination on one component
+
+	filtering @connection(key: "LinkList_allLinks", filters: [])
+
+	//return from this method effect nothing
+//     getFragmentVariables(previousVariables, totalCount) {

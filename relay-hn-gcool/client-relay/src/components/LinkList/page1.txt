@@ -1,0 +1,40 @@
+query LinkListPageQuery(
+  $count: Int!
+  $after: String
+) {
+  viewer {
+    ...LinkList_viewer_2QE1um
+    id
+  }
+}
+
+fragment LinkList_viewer_2QE1um on Viewer {
+  allLinks(first: $count, after: $after, orderBy: createdAt_ASC) {
+    edges {
+      node {
+        ...Link_link
+        id
+        __typename
+      }
+      cursor
+    }
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+  }
+}
+
+fragment Link_link on Link {
+  id
+  description
+  url
+  createdAt
+  postedBy {
+    id
+    name
+  }
+  votes {
+    count
+  }
+}
