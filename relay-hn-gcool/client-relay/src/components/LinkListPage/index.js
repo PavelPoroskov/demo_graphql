@@ -14,7 +14,10 @@ class LinkListPage extends Component {
   //       dataFrom={this.dataFrom}
   //     />
 
-  variables = { count: ITEMS_PER_PAGE }
+  variables = { 
+    count: ITEMS_PER_PAGE,
+    filter: null
+  }
 
   render() {
 
