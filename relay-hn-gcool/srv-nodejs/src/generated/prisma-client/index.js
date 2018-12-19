@@ -7,6 +7,14 @@ var models = [
   {
     name: "Link",
     embedded: false
+  },
+  {
+    name: "User",
+    embedded: false
+  },
+  {
+    name: "Vote",
+    embedded: false
   }
 ];
 exports.Prisma = prisma_lib_1.makePrismaClientClass({
@@ -16,9 +24,3 @@ exports.Prisma = prisma_lib_1.makePrismaClientClass({
   secret: `mysecret09`
 });
 exports.prisma = new exports.Prisma();
-var models = [
-  {
-    name: "Link",
-    embedded: false
-  }
-];
