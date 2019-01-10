@@ -21,7 +21,7 @@ class App extends Component {
               <Route exact path='/' component={LinkListPage}/>
               <Route exact path='/create' component={CreateLink}/>
               <Route exact path='/login' component={Login}/>
-             </Switch>
+            </Switch>
           </div>
         </div>
       </BrowserRouter>
