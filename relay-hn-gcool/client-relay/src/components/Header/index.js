@@ -1,45 +1,21 @@
-import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useContext } from 'react'
 import { withRouter } from 'react-router'
 
-import { GC_USER_ID, GC_AUTH_TOKEN } from '../../constants'
+import HeaderView from './View'
 
-class Header extends Component {
+import {AppContext} from '../../context';
 
-  render() {
-    //console.log('Header render withRouter()')
+//import { GC_USER_ID, GC_AUTH_TOKEN } from '../../constants'
 
-    const userId = localStorage.getItem(GC_USER_ID)
-    return (
-      <div className='flex pa1 justify-between nowrap orange'>
-        <div className='flex flex-fixed black'>
-          
-          <Link to='/' className='ml1 no-underline black'>
-            <div className='fw7 mr1'>Hacker News</div>
-          </Link>
-          {userId &&
-          <div className='flex'>
-            <div className='ml1'>|</div>
-            <Link to='/create' className='ml1 no-underline black'>Add</Link>
-          </div>
-          }
-        </div>
-        <div className='flex flex-fixed'>
-          {userId ?
-            <div className='ml1 pointer black' onClick={this._logout}>logout</div>
-            :
-            <Link to='/login' className='ml1 no-underline black'>login</Link>
-          }
-        </div>
-      </div>
-    )
-  }
+function Header(props) {
 
-  _logout = () => {
-    localStorage.removeItem(GC_USER_ID)
-    localStorage.removeItem(GC_AUTH_TOKEN)
-    this.props.history.push(`/`)
-  }
+  const context = useContext(AppContext)
+  const onLogout = useCallback( () => {
+    context.logout()
+    props.history.push(`/`)
+  }, [true] )
+
+  return <HeaderView userId={context.loggedUserId} logout={onLogout} />
 }
 
 export default withRouter(Header)

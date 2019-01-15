@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-import { GC_USER_ID, GC_AUTH_TOKEN } from '../../constants'
+//import { GC_USER_ID, GC_AUTH_TOKEN } from '../../constants'
 import AuthenticateUserMutation from '../../mutations/AuthenticateUserMutation'
 import SignupUserMutation from '../../mutations/SignupUserMutation'
 
@@ -77,7 +77,7 @@ class Login extends Component {
     const { name, email, password } = this.state
     if (this.state.login) {
       AuthenticateUserMutation.commit(email, password, (id, token, errors) => {
-        this._saveUserData(id, token)
+        context.login(id, token)
         this.props.history.push(`/`)
       })
     } else {
@@ -86,14 +86,14 @@ class Login extends Component {
           this.setState({ errors: errors })
           return
         }
-        this._saveUserData(id, token)
+        context.login(id, token)
         this.props.history.push(`/`)
       })
     }
   }
-  _saveUserData = (id, token) => {
-    localStorage.setItem(GC_USER_ID, id)
-    localStorage.setItem(GC_AUTH_TOKEN, token)
-  }
+  // _saveUserData = (id, token) => {
+  //   localStorage.setItem(GC_USER_ID, id)
+  //   localStorage.setItem(GC_AUTH_TOKEN, token)
+  // }
 
 }

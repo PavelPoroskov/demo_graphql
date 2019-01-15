@@ -1,17 +1,20 @@
 import { Environment, Network, RecordSource, Store } from 'relay-runtime';
 import { SubscriptionClient } from 'subscriptions-transport-ws'
 
-import { GC_AUTH_TOKEN } from './constants'
+import { getCurrentUserIdToken, setCurrentUserIdToken } from './userauth'
+
 
 async function fetchQuery(operation, variables) {
   const endpoint = process.env.REACT_APP_GRAPHQL_ENDPOINT
+  
+  const {userToken} = getCurrentUserIdToken()
 
   const response = await fetch( endpoint, {
     method: 'POST',
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${localStorage.getItem(GC_AUTH_TOKEN)}`
+      'Authorization': `Bearer ${userToken}`
     },
     body: JSON.stringify({
       query: operation.text,
@@ -40,7 +43,12 @@ const setupSubscription = (operation, variables, cacheConfig, observer) => {
   .subscribe( onNext, onError, onCompleted );
 }
 
-export default new Environment({
-  network: Network.create( fetchQuery, setupSubscription ),
-  store: new Store(new RecordSource())
-});
+
+export {
+  environment: new Environment({
+    network: Network.create( fetchQuery, setupSubscription ),
+    store: new Store(new RecordSource())
+    }),
+  getCurrentUserIdToken,
+  setCurrentUserIdToken
+}

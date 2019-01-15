@@ -2,8 +2,8 @@ import React, { Component } from 'react'
 import { fetchQuery } from 'relay-runtime'
 import graphql from "babel-plugin-relay/macro"
 
-//import { GC_USER_ID } from '../../constants'
-import { timeDifferenceForDate } from '../../utils'
+import LinkView from './View0'
+
 import CreateVoteMutation from '../../mutations/CreateVoteMutation'
 
 
@@ -12,7 +12,7 @@ class Link extends Component {
 
   render() {
 //    const userId = localStorage.getItem(GC_USER_ID)
-    const userId = this.props.userId
+    //const userId = this.props.userId
 
     return (
       <div className='flex mt2 items-start'>

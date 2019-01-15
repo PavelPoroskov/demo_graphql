@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { QueryRenderer } from 'react-relay'
 import graphql from "babel-plugin-relay/macro";
-import environment from '../../Environment'
+import {environment} from '../../Environment'
 
 import LinkList from '../LinkList'
 import { ITEMS_PER_PAGE } from '../../constants'
@@ -20,7 +20,8 @@ class LinkListPage extends Component {
   }
 
   render() {
-
+    //const {userId} = getCurrentUserIdToken()
+    
     return (
       <QueryRenderer
         environment={environment}
@@ -42,7 +43,7 @@ class LinkListPage extends Component {
             return <div>{error.message}</div>
           } else if (props) {
             console.log('QueryRenderer render: props')
-            return <LinkList viewer={props.viewer} />
+            return <LinkList viewer={props.viewer}/>
           }
           
           console.log('QueryRenderer render: Loading')

@@ -1,7 +1,7 @@
 import { commitMutation } from 'react-relay'
 import graphql from "babel-plugin-relay/macro"
 
-import environment from '../Environment'
+import {environment, getCurrentUserIdToken} from '../Environment'
 //import { ConnectionHandler } from 'relay-runtime'
 
 const mutation = graphql`
@@ -23,7 +23,10 @@ const mutation = graphql`
   }
 `
 
-const commit = (userId, linkId) => {
+const commit = (linkId) => {
+
+  const {userId} = getCurrentUserIdToken()
+
   const variables = {
     input: {
       userId,

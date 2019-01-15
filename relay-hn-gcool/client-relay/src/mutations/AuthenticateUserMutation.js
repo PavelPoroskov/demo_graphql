@@ -1,7 +1,7 @@
 import { commitMutation } from 'react-relay'
 import graphql from "babel-plugin-relay/macro"
 
-import environment from '../Environment'
+import {environment} from '../Environment'
 
 
   // mutation CreateUserMutation($createUserInput: SignupUserInput!, $signinUserInput: SigninUserInput!) {
