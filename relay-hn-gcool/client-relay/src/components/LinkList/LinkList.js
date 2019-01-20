@@ -2,7 +2,7 @@
 import graphql from "babel-plugin-relay/macro";
 import { createPaginationContainer } from "react-relay";
 
-import View from './View'
+import ConnectedView from './Connect'
 //import { ITEMS_PER_PAGE } from '../../constants'
 
 //let locCursor
@@ -13,7 +13,7 @@ import View from './View'
       // )
 
 export default createPaginationContainer( 
-  View, 
+  ConnectedView, 
   {
     viewer: graphql`
       fragment LinkList_viewer on Viewer @argumentDefinitions(

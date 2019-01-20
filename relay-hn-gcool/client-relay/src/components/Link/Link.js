@@ -2,10 +2,10 @@
 import graphql from "babel-plugin-relay/macro";
 import { createFragmentContainer } from "react-relay";
 
-import View from './View'
+import ConnectedView from './Connect'
 
 export default createFragmentContainer( 
-  View, 
+  ConnectedView, 
   graphql`
     fragment Link_link on Link {
       id
