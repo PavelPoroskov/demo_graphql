@@ -2,7 +2,7 @@ import { timeDifferenceForDate } from '../../utils'
 
 export default 
 function LinkView(props) {
-  const {userId, url, description, index, votes, postedByName, createdAt, voteForLink}
+  const {userId, url, description, index, votes, postedByName, createdAt, voteForLink} = props
 
   return (
     <div className='flex mt2 items-start'>
@@ -12,7 +12,7 @@ function LinkView(props) {
       </div>
       <div className='ml1'>
         <div>{description} ({url})</div>
-        <div className='f6 lh-copy gray'>{votes} votes | by {postedByName ? postedByName : 'Unknown'} {timeDifferenceForDate(createdAt)}</div>
+        <div className='f6 lh-copy gray'>{votes} votes | by {postedByName || 'Unknown'} {timeDifferenceForDate(createdAt)}</div>
       </div>
     </div>
   )

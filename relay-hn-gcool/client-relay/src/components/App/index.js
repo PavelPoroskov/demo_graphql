@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react'
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom'
 
-import PrivateRoute from './PrivateRoute'
+import PrivateRoute from '../PrivateRoute'
 
 import Header from '../Header'
 import LinkListPage from '../LinkListPage'

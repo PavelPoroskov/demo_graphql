@@ -2,60 +2,24 @@ import React, { Component } from 'react'
 import { fetchQuery } from 'relay-runtime'
 import graphql from "babel-plugin-relay/macro"
 
-import LinkView from './View0'
+import React, { useContext, useMemo } from 'react'
 
 import CreateVoteMutation from '../../mutations/CreateVoteMutation'
+import {AppContext} from '../../context';
+
+import LinkView from './View0'
 
 
-export default 
-class Link extends Component {
+const userCanVoteOnLink = async (userId, linkId, relayEnvironment) => {
 
-  render() {
-//    const userId = localStorage.getItem(GC_USER_ID)
-    //const userId = this.props.userId
-
-    return (
-      <div className='flex mt2 items-start'>
-        <div className='flex items-center'>
-          <span className='gray'>{this.props.index + 1}.</span>
-          {userId && <div className='ml1 gray f11' onClick={() => this._voteForLink()}>▲</div>}
-        </div>
-        <div className='ml1'>
-          <div>{this.props.link.description} ({this.props.link.url})</div>
-          <div className='f6 lh-copy gray'>{this.props.link.votes.count} votes | by {this.props.link.postedBy ? this.props.link.postedBy.name : 'Unknown'} {timeDifferenceForDate(this.props.link.createdAt)}</div>
-        </div>
-      </div>
-    )
-  }
-
-  _voteForLink = async () => {
-    //const userId = localStorage.getItem(GC_USER_ID)
-    const userId = this.props.userId
-    if (!userId) {
-      console.log(`Can't vote without user ID`)
-      return
-    }
-
-    const linkId = this.props.link.id
-
-    const canUserVoteOnLink = await this._userCanVoteOnLink(userId, linkId)
-    if (canUserVoteOnLink) {
-      CreateVoteMutation.commit(userId, linkId)
-    } else {
-      console.log(`Current already voted for that link`)
+  const variables = {
+    filter: {
+      user: { id: userId },
+      link: { id: linkId }
     }
   }
 
-  _userCanVoteOnLink = async (userId, linkId) => {
-
-    const variables = {
-      filter: {
-        user: { id: userId },
-        link: { id: linkId }
-      }
-    }
-
-    const query = graphql`
+  const query = graphql`
     query ViewCheckVoteQuery($filter: VoteFilter!) {
       viewer {
         allVotes(filter: $filter) {
@@ -67,9 +31,43 @@ class Link extends Component {
         }
       }
     }`
-    const result = await fetchQuery( this.props.relay.environment, query, variables )
-    //console.log('_userCanVoteOnLink')
-    //console.log(result)
-    return result.viewer.allVotes.edges.length === 0
-  }
+  const result = await fetchQuery( relayEnvironment, query, variables )
+  //console.log('_userCanVoteOnLink')
+  //console.log(result)
+  return result.viewer.allVotes.edges.length === 0
+}
+
+
+export default 
+function Link(props) {
+
+  const context = useContext(AppContext)
+  const voteForLink = useCallback( async () => {
+      //const userId = localStorage.getItem(GC_USER_ID)
+      const userId = context.loggedUserId
+      if (!userId) {
+        console.log(`Can't vote without user ID`)
+        return
+      }
+
+      const linkId = props.link.id
+
+      const canUserVoteOnLink = await userCanVoteOnLink(userId, linkId, props.relay.environment )
+      if (canUserVoteOnLink) {
+        CreateVoteMutation.commit(userId, linkId)
+      } else {
+        console.log(`Current already voted for that link`)
+      }
+    }
+  }), [context.loggedUserId, props.link])
+
+  const memoizedProps = useMemo(() => ({
+    index: props.index + 1,
+    url: props.link.url,
+    description: props.link.description,
+    votes: props.link.votes.count,
+    postedByName: props.link.postedBy && props.link.postedBy.name,
+  }), [props.link]);
+
+  return <LinkView userId={context.loggedUserId} voteForLink={voteForLink} {...memoizedProps} />
 }
