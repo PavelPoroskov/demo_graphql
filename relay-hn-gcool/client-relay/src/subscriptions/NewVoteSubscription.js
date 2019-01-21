@@ -1,7 +1,7 @@
 import { requestSubscription } from 'react-relay'
 import graphql from "babel-plugin-relay/macro"
 
-import environment from '../Environment'
+import {environment} from '../Environment'
 
 const newVoteSubscription = graphql`
   subscription NewVoteSubscription {

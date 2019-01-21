@@ -41,3 +41,14 @@ input {
   cursor: pointer;
   max-width: 250px;
 }
+
+.btnVote {
+  cursor: pointer;
+}
+
+.link {
+  text-decoration: none;
+}
+.link:hover {
+  text-decoration: underline; 
+}

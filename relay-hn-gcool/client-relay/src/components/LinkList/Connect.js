@@ -1,4 +1,4 @@
-import React, {useEffect, useCallback} from 'react'
+import React, {useEffect, useCallback, useMemo} from 'react'
 
 import NewVoteSubscription from '../../subscriptions/NewVoteSubscription'
 import LinkListView from './View'
@@ -12,10 +12,10 @@ function LinkList(props) {
   }, [] )
 
   const list = useMemo( () => {
-    return this.props.viewer.allLinks.edges.map( o => {link: o.node, key: o.node.__id} )
+    return props.viewer.allLinks.edges.map( o => ({link: o.node, key: o.node.__id}) )
   }, [props.viewer.allLinks] )
 
-  const loadMore = ueeCallback( () => {
+  const loadMore = useCallback( () => {
     if (!props.relay.hasMore()) {
       console.log(`Nothing more to load`)
       return

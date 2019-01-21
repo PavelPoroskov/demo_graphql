@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useCallback } from 'react'
 import { withRouter } from 'react-router'
 
 import HeaderView from './View'

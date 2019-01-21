@@ -43,12 +43,13 @@ const setupSubscription = (operation, variables, cacheConfig, observer) => {
   .subscribe( onNext, onError, onCompleted );
 }
 
-
-export {
-  environment: new Environment({
+const environment = new Environment({
     network: Network.create( fetchQuery, setupSubscription ),
     store: new Store(new RecordSource())
-    }),
+  })
+
+export {
+  environment,
   getCurrentUserIdToken,
   setCurrentUserIdToken
 }

@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import React, { useCallback } from 'react'
 import CreateLinkView from './View'
 
 import CreateLinkMutation from '../../mutations/CreateLinkMutation'

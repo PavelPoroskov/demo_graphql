@@ -16,4 +16,5 @@ function LinkListView(props) {
         <div className='pointer' onClick={props.loadMore}>More</div>
       </div>
     </div>
+  )
 }
