@@ -8,8 +8,9 @@ import LinkListPage from '../LinkListPage'
 import CreateLink from '../CreateLink'
 import Login from '../Login'
 
-import {AppContext} from '../../context';
+import {AppContext} from '../../context'
 import { getCurrentUserIdToken, setCurrentUserIdToken } from '../../Environment'
+import ErrorBoundary from '../ErrorBoundary'
 
 const {userId} = getCurrentUserIdToken()
 
@@ -17,6 +18,7 @@ export default
 function App() {
 
   const [loggedUserId, setLoggedUserId] = useState(userId)
+  //const [hasErrors, setErrors] = useState(false)
   const memoizedContextValue = useMemo(() => ({
     loggedUserId,
     login: (userId, userToken) => {
@@ -26,7 +28,10 @@ function App() {
     logout: () => {
       setLoggedUserId('')
       setCurrentUserIdToken('', '')
-    }
+    },
+    // setError: (arErrors) => {
+    //   setErrors(true)
+    // }
   }), [loggedUserId]);
 
 
@@ -36,12 +41,14 @@ function App() {
         <div className='center w85'>
           <Header />
           <div className='ph3 pv1 background-gray'>
+          <ErrorBoundary>
             <Switch>
               <Route exact path='/' component={LinkListPage}/>
               <Route exact path='/login' component={Login}/>
               <PrivateRoute exact path='/create' component={CreateLink}/>
               <Redirect to='/'/>
             </Switch>
+          </ErrorBoundary>
           </div>
         </div>
       </BrowserRouter>
