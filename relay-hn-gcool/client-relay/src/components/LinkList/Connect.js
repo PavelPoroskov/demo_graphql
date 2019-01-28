@@ -1,4 +1,6 @@
-import React, {useEffect, useCallback, useMemo} from 'react'
+import React, {
+  useEffect, 
+  useCallback, useMemo} from 'react'
 
 import NewVoteSubscription from '../../subscriptions/NewVoteSubscription'
 import LinkListView from './View'
@@ -12,8 +14,10 @@ function LinkList(props) {
   }, [] )
 
   const list = useMemo( () => {
-    return props.viewer.allLinks.edges.map( o => ({link: o.node, key: o.node.__id}) )
-  }, [props.viewer.allLinks] )
+//    return props.viewer.allLinks.edges.map( o => ({link: o.node, key: o.node.__id}) )
+    return (props.viewer && props.viewer.allLinks && props.viewer.allLinks.edges.map( o => ({link: o.node, key: o.node.__id}) ) ) || []
+  }, [props.viewer] )
+//  }, [props.viewer.allLinks] )
 
   const loadMore = useCallback( () => {
     if (!props.relay.hasMore()) {

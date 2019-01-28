@@ -3,9 +3,12 @@ import CreateLinkView from './View'
 
 import CreateLinkMutation from '../../mutations/CreateLinkMutation'
 
+//import {AppContext} from '../../context'
+
 export default 
 function CreateLin(props) {
 
+  //const context = useContext(AppContext)
   const createLink = useCallback( (url, description) => {
     CreateLinkMutation.commit( 
       //this.props.relay.environment, 
@@ -16,7 +19,10 @@ function CreateLin(props) {
         console.log(`Mutation completed`)
 
         props.history.push('/')
-      }
+      },
+      // (error) => {
+      //   context.setErrors([error])
+      // },
     )
   }      
   , [true] )

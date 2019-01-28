@@ -21,7 +21,15 @@ async function fetchQuery(operation, variables) {
       variables
     })
   });
-  return await response.json();
+
+//  return await response.json();
+  const resJson = await response.json();
+  //console.log('**FETCH**')
+  //console.log(resJson)
+  //resJson = { data: {...} }
+  //resJson = { data: null, errors: [{...},] }
+
+  return resJson;
 }
 
 const setupSubscription = (operation, variables, cacheConfig, observer) => {

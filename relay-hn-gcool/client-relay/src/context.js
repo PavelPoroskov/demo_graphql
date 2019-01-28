@@ -13,4 +13,7 @@ export const AppContext = React.createContext({
   logout: () => {
   	//setCurrentUserIdToken( '', '' )
   },
+  setErrors: (arErrors) => {
+  	
+  },
 });

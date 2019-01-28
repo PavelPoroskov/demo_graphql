@@ -24,7 +24,7 @@ const mutation = graphql`
 
 // 3
 //const commit = (environment, description, url, callback) => {
-const commit = ( url, description, callback) => {
+const commit = ( url, description, callbackCompleted, callbackError ) => {
 
   const {userId} = getCurrentUserIdToken()
   // 4
@@ -45,9 +45,12 @@ const commit = ( url, description, callback) => {
       variables,
       // 6
       onCompleted: () => {
-        callback()
+        callbackCompleted()
       },
-      onError: err => console.error(err),
+      onError: err => {
+        console.error(err)
+        //callbackError(err)
+      },
     },
   )
 }

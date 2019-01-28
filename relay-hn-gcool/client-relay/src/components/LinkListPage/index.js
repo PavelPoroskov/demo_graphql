@@ -36,7 +36,11 @@ class LinkListPage extends Component {
           }
         `}
         variables={this.variables}
-        render={({error, props}) => {
+        render={({error, props, retry}) => {
+          // console.log('QueryRenderer render: props')
+          // console.log(props)
+          // console.log('QueryRenderer render: error')
+          // console.log(error)
 
           if (error) {
             console.log('QueryRenderer render: error')
@@ -44,6 +48,9 @@ class LinkListPage extends Component {
           } else if (props) {
             console.log('QueryRenderer render: props')
             return <LinkList viewer={props.viewer}/>
+          // } else if (props === undefined) {
+          //   console.log('QueryRenderer render: error')
+          //   return <div>Internal server error</div>
           }
           
           console.log('QueryRenderer render: Loading')

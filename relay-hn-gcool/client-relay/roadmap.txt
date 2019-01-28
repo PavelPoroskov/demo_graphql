@@ -1,0 +1,11 @@
+
+
+create link
+	i can add empty link
+	nedd validation
+
+process network error
+	create link
+	sign up
+	signin
+	vote

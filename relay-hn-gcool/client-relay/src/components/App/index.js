@@ -18,7 +18,7 @@ export default
 function App() {
 
   const [loggedUserId, setLoggedUserId] = useState(userId)
-  //const [hasErrors, setErrors] = useState(false)
+  //const [errors, setErrors] = useState([])
   const memoizedContextValue = useMemo(() => ({
     loggedUserId,
     login: (userId, userToken) => {
@@ -29,11 +29,12 @@ function App() {
       setLoggedUserId('')
       setCurrentUserIdToken('', '')
     },
-    // setError: (arErrors) => {
+    // setErrors: (arErrors) => {
     //   setErrors(true)
     // }
   }), [loggedUserId]);
 
+//          <ErrorBoundary othererrors={errors}>
 
   return (
     <AppContext.Provider value={memoizedContextValue}>
