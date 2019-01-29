@@ -19,7 +19,7 @@ const userCanVoteOnLink = async (userId, linkId, relayEnvironment) => {
   }
 
   const query = graphql`
-    query ViewCheckVoteQuery($filter: VoteFilter!) {
+    query ConnectLinkViewCheckVoteQuery($filter: VoteFilter!) {
       viewer {
         allVotes(filter: $filter) {
           edges {

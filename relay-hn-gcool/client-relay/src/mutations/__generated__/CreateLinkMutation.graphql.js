@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash c6877266968f35e9e741c2679bc53bab
+ * @relayHash 5ab38f8393b7d20c913f9d0a10b70b73
  */
 
 /* eslint-disable */
@@ -9,7 +9,7 @@
 
 /*::
 import type { ConcreteRequest } from 'relay-runtime';
-export type CreateLinkInput = {
+export type CreateLinkInput = {|
   description?: ?string,
   url: string,
   postedById?: ?string,
@@ -17,8 +17,8 @@ export type CreateLinkInput = {
   votesIds?: ?$ReadOnlyArray<string>,
   votes?: ?$ReadOnlyArray<LinkvotesVote>,
   clientMutationId: string,
-};
-export type LinkpostedByUser = {
+|};
+export type LinkpostedByUser = {|
   email: string,
   name: string,
   password: string,
@@ -26,18 +26,18 @@ export type LinkpostedByUser = {
   links?: ?$ReadOnlyArray<UserlinksLink>,
   votesIds?: ?$ReadOnlyArray<string>,
   votes?: ?$ReadOnlyArray<UservotesVote>,
-};
-export type UserlinksLink = {
+|};
+export type UserlinksLink = {|
   description?: ?string,
   url: string,
   votesIds?: ?$ReadOnlyArray<string>,
   votes?: ?$ReadOnlyArray<LinkvotesVote>,
-};
-export type LinkvotesVote = {
+|};
+export type LinkvotesVote = {|
   userId?: ?string,
   user?: ?VoteuserUser,
-};
-export type VoteuserUser = {
+|};
+export type VoteuserUser = {|
   email: string,
   name: string,
   password: string,
@@ -45,19 +45,19 @@ export type VoteuserUser = {
   links?: ?$ReadOnlyArray<UserlinksLink>,
   votesIds?: ?$ReadOnlyArray<string>,
   votes?: ?$ReadOnlyArray<UservotesVote>,
-};
-export type UservotesVote = {
+|};
+export type UservotesVote = {|
   linkId?: ?string,
   link?: ?VotelinkLink,
-};
-export type VotelinkLink = {
+|};
+export type VotelinkLink = {|
   description?: ?string,
   url: string,
   postedById?: ?string,
   postedBy?: ?LinkpostedByUser,
   votesIds?: ?$ReadOnlyArray<string>,
   votes?: ?$ReadOnlyArray<LinkvotesVote>,
-};
+|};
 export type CreateLinkMutationVariables = {|
   input: CreateLinkInput
 |};
@@ -141,7 +141,7 @@ v2 = [
         "concreteType": "Link",
         "plural": false,
         "selections": [
-          v1,
+          (v1/*: any*/),
           {
             "kind": "ScalarField",
             "alias": null,
@@ -165,7 +165,7 @@ v2 = [
             "concreteType": "User",
             "plural": false,
             "selections": [
-              v1,
+              (v1/*: any*/),
               {
                 "kind": "ScalarField",
                 "alias": null,
@@ -182,24 +182,26 @@ v2 = [
 ];
 return {
   "kind": "Request",
-  "operationKind": "mutation",
-  "name": "CreateLinkMutation",
-  "id": null,
-  "text": "mutation CreateLinkMutation(\n  $input: CreateLinkInput!\n) {\n  createLink(input: $input) {\n    link {\n      id\n      url\n      description\n      postedBy {\n        id\n        name\n      }\n    }\n  }\n}\n",
-  "metadata": {},
   "fragment": {
     "kind": "Fragment",
     "name": "CreateLinkMutation",
     "type": "Mutation",
     "metadata": null,
-    "argumentDefinitions": v0,
-    "selections": v2
+    "argumentDefinitions": (v0/*: any*/),
+    "selections": (v2/*: any*/)
   },
   "operation": {
     "kind": "Operation",
     "name": "CreateLinkMutation",
-    "argumentDefinitions": v0,
-    "selections": v2
+    "argumentDefinitions": (v0/*: any*/),
+    "selections": (v2/*: any*/)
+  },
+  "params": {
+    "operationKind": "mutation",
+    "name": "CreateLinkMutation",
+    "id": null,
+    "text": "mutation CreateLinkMutation(\n  $input: CreateLinkInput!\n) {\n  createLink(input: $input) {\n    link {\n      id\n      url\n      description\n      postedBy {\n        id\n        name\n      }\n    }\n  }\n}\n",
+    "metadata": {}
   }
 };
 })();
