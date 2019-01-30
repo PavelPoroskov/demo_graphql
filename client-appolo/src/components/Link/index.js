@@ -1,12 +1,9 @@
 import React from 'react'
 
-export default
-function Link (props) {
-  return (
-	  <div>
-	    <div>
-	      {props.description} ({props.url})
-	    </div>
-	  </div>
-	)
-}
+export default (props) => (
+  <div>
+    <div>
+      {props.link.description} ({props.link.url})
+    </div>
+  </div>
+)
