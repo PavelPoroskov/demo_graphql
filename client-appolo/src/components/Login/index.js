@@ -1,7 +1,7 @@
 import React, { useContext, useCallback } from 'react'
 //import React from 'react'
 
-import {AppContext} from '../../context';
+import {AppContext} from '../../App/context';
 import LoginView from './View'
 
 import AuthenticateUserMutation from '../../mutations/AuthenticateUserMutation'

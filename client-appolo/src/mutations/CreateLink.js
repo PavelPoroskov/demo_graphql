@@ -13,20 +13,20 @@ const POST_MUTATION = gql`
   }
 `
 
-function commit( url, description, onComplete, onError ) {
-  netclient.client.mutate({
+function commit( url, description ) {
+  return netclient.client.mutate({
     mutation: POST_MUTATION,
     variables: {
       url,
       description
     }
   })
-  .then( () => {
-    onComplete()
-  })
-  .catch( (error) => {
-    onError(error)
-  })
+  // .then( () => {
+  //   onComplete()
+  // })
+  // .catch( (error) => {
+  //   onError(error)
+  // })
 }
 
 export default {
