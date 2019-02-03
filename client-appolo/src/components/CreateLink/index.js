@@ -1,68 +1,24 @@
-//import React, { useState } from 'react'
-//import { Mutation } from 'react-apollo'
-import gql from 'graphql-tag'
-import { graphql } from 'react-apollo'
-import { compose, withHandlers } from 'recompose'
+// // with component Mutation (from react-appolo)
+// // one component/file 'index0'
+// import CreateLink from './index0'
 
-import CreateLinkView from './View'
+// // with HOCs: graphql (from react-appolo); compose, withHandlers (from recompose)
+// // two files: 'index1' (hoc) and 'View.js' (CreateLinkView) 
+// import CreateLink from './index1'
+
+// not use recompose
+// three files: 'index2' (CreateLink), 'mutations/CreateLink', and 'View.js' (CreateLinkView) 
+// ++: more modular
+import CreateLink from './index2'
+
+// // not use recompose
+// // two files: 'index3' (CreateLink), and 'View.js' (CreateLinkView) 
+// import CreateLink from './index3'
 
 
-const POST_MUTATION = gql`
-  mutation PostMutation($description: String!, $url: String!) {
-    post(description: $description, url: $url) {
-      id
-      createdAt
-      url
-      description
-    }
-  }
-`
+//which best for error processing?
+//1) dont go from view component if error on server (mutation error), not valid inputs
+//   user can fix inputs
+//2) global(app context) error turn on
 
-// export default
-// function CreateLinkView(props)  {
-
-//   const [description, setDescription] = useState('')
-//   const [url, setUrl] = useState('')
-
-//   return (
-//     <div>
-//       <div className='flex flex-column mt3'>
-//         <input
-//           className='mb2'
-//           value={description}
-//           onChange={(e) => setDescription(e.target.value)}
-//           type='text'
-//           placeholder='A description for the link'
-//         />
-//         <input
-//           className='mb2'
-//           value={url}
-//           onChange={(e) => setUrl(e.target.value)}
-//           type='text'
-//           placeholder='The URL for the link'
-//         />
-//       </div>
-//       <Mutation mutation={POST_MUTATION} variables={{ description, url }}>
-//         {postMutation => <button onClick={postMutation}>Submit</button>}
-//       </Mutation>      
-//     </div>
-//   )
-// }
-
-export default compose(
-  graphql(POST_MUTATION),
-  withHandlers({
-    createLink: (props) => async (url, description) => {
-        return props.mutate({
-            variables: {
-              url,
-              description
-            },
-          }).then((data: string) => {
-          //console.log(data, 'Return value');
-        }).catch((e: Object) => {
-          //console.error(e, 'Error');
-        });
-      }
-  })
-)(CreateLinkView);
+export default CreateLink

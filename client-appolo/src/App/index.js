@@ -1,41 +1,66 @@
-//import React, { Component } from 'react';
-import React from 'react';
-
+import React, { useState, useMemo } from 'react'
+import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom'
 import { ApolloProvider } from 'react-apollo'
-import ApolloClient from 'apollo-boost';
 
+import {AppContext} from './context'
+import netclient from './netclient'
+
+import PrivateRoute from '../components/PrivateRoute'
+import ErrorBoundary from '../components/ErrorBoundary'
+
+import Header from '../components/Header'
 import LinkList from '../components/LinkList'
-//import CreateLink from '../components/CreateLink'
+//import Login from '../components/Login'
+import CreateLink from '../components/CreateLink'
 
 import './App.css';
 
-import { getCurrentUserIdToken, //setCurrentUserIdToken 
-} from './userauth'
 
+const {userId} = netclient.getCurrentUserIdToken()
 
-//https://www.apollographql.com/docs/react/recipes/authentication.html#login-logout
-//Reset store on logout
+export default
+function App() {
 
-const client = new ApolloClient({
-  //uri: 'http://localhost:4000'
-  uri: process.env.REACT_APP_GRAPHQL_ENDPOINT,
-  request: async operation => {
-    const {userToken} = getCurrentUserIdToken()
-    if (userToken) {
-      operation.setContext({
-        headers: {
-          'Authorization': `Bearer ${userToken}`
-        }
-      });
-    }
-  },  
-});
+  const [loggedUserId, setLoggedUserId] = useState(userId)
+  //const [errors, setErrors] = useState([])
+  const memoizedContextValue = useMemo(() => ({
+    loggedUserId,
+    login: (userId, userToken) => {
+      netclient.setCurrentUserIdToken(userId, userToken)
+      setLoggedUserId(userId)
+    },
+    logout: () => {
+      netclient.setCurrentUserIdToken('', '')
+      setLoggedUserId('')
+    },
+    // setErrors: (arErrors) => {
+    //   setErrors(true)
+    // }
+  }), [loggedUserId]);
 
-export default (props) => (
-  <ApolloProvider client={client}>
-    <LinkList />
+//          <ErrorBoundary othererrors={errors}>
+
+  return (
+    <AppContext.Provider value={memoizedContextValue}>
+      <ApolloProvider client={netclient.client}>
+        <BrowserRouter> 
+          <div className='center w85'>
+            <Header />
+            <div className='ph3 pv1 background-gray'>
+            <ErrorBoundary>
+              <Switch>
+                <Route exact path='/' component={LinkList}/>
   {/*
-    <CreateLink />
+                <Route exact path='/login' component={Login}/>
   */}
-  </ApolloProvider>
-)
+                <PrivateRoute exact path='/create' component={CreateLink}/>
+                <Redirect to='/'/>
+              </Switch>
+            </ErrorBoundary>
+            </div>
+          </div>
+        </BrowserRouter>
+      </ApolloProvider>
+    </AppContext.Provider>
+  )
+}

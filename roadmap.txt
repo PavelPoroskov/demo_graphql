@@ -1,4 +1,12 @@
 
+todo
+)while mutation is processing show ?spinner
+)use formik/yu* for form validation
+)testing
+  unit
+  integration
+  e2e
+
 1) CRA 2, relay 17, graphcool-framework
 	data scheme: Hacker News
 	add network layer

@@ -1,4 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState } from 'react'
+import { Mutation } from 'react-apollo'
+
+const POST_MUTATION = gql`
+  mutation PostMutation($description: String!, $url: String!) {
+    post(description: $description, url: $url) {
+      id
+      createdAt
+      url
+      description
+    }
+  }
+`
 
 export default (props) => {
 
@@ -23,12 +35,11 @@ export default (props) => {
           placeholder='The URL for the link'
         />
       </div>
-      <div
-        className='button'
-        onClick={() => props.createLink(url, description)}
+      <Mutation mutation={POST_MUTATION} variables={{ description, url }}
+        onCompleted={() => this.props.history.push('/')}
       >
-        submit
-      </div>
+        {postMutation => <button onClick={postMutation}>Submit</button>}
+      </Mutation>      
     </div>
   )
 }
