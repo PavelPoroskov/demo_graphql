@@ -18,6 +18,9 @@ import './App.css';
 
 const {userId} = netclient.getCurrentUserIdToken()
 
+// export default
+// React.memo()
+
 export default
 function App() {
 
@@ -33,6 +36,7 @@ function App() {
       netclient.setCurrentUserIdToken('', '')
       setLoggedUserId('')
     },
+    client: netclient.client,
     // setErrors: (arErrors) => {
     //   setErrors(true)
     // }

@@ -1,19 +1,19 @@
 // // with component Mutation (from react-appolo)
 // // one component/file 'index0'
-// import CreateLink from './index0'
+// import CreateLink from './index0ComponentMutation'
 
 // // with HOCs: graphql (from react-appolo); compose, withHandlers (from recompose)
 // // two files: 'index1' (hoc) and 'View.js' (CreateLinkView) 
-// import CreateLink from './index1'
+// import CreateLink from './index1Recompose'
 
 // not use recompose
 // three files: 'index2' (CreateLink), 'mutations/CreateLink', and 'View.js' (CreateLinkView) 
 // ++: more modular
-import CreateLink from './index2'
+// import CreateLink from './index2ClientMutateFile'
 
 // // not use recompose
 // // two files: 'index3' (CreateLink), and 'View.js' (CreateLinkView) 
-// import CreateLink from './index3'
+import CreateLink from './index3ClientMutate'
 
 
 //which best for error processing?

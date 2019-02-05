@@ -1,4 +1,7 @@
 
+optimize rerender
+React.memo( function() )
+
 todo
 )while mutation is processing show ?spinner
 )use formik/yu* for form validation
