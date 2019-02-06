@@ -43,6 +43,12 @@ async function login(parent, args, context, info) {
 
 function post(parent, args, context, info) {
   const userId = getUserId(context)
+  if (!args.url) {
+    throw new Error('Need not empty URL')
+  }
+  // if (!args.description) {
+  //   throw new Error('Need not empty description')
+  // }
   return context.prisma.createLink({
     url: args.url,
     description: args.description,

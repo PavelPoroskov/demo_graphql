@@ -10,7 +10,7 @@ import ErrorBoundary from '../components/ErrorBoundary'
 
 import Header from '../components/Header'
 import LinkList from '../components/LinkList'
-//import Login from '../components/Login'
+import Login from '../components/Login'
 import CreateLink from '../components/CreateLink'
 
 import './App.css';
@@ -54,10 +54,8 @@ function App() {
             <ErrorBoundary>
               <Switch>
                 <Route exact path='/' component={LinkList}/>
-  {/*
                 <Route exact path='/login' component={Login}/>
-  */}
-                <PrivateRoute exact path='/create' component={CreateLink}/>
+                 <PrivateRoute exact path='/create' component={CreateLink}/>
                 <Redirect to='/'/>
               </Switch>
             </ErrorBoundary>

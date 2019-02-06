@@ -1,36 +1,41 @@
-import React, { useContext, useCallback } from 'react'
+import React, { useContext } from 'react'
 //import React from 'react'
 
 import {AppContext} from '../../App/context';
 import LoginView from './View'
 
-import AuthenticateUserMutation from '../../mutations/AuthenticateUserMutation'
-import SignupUserMutation from '../../mutations/SignupUserMutation'
+import AuthenticateUserMutation from '../../mutations/AuthenticateUser'
+import SignupUserMutation from '../../mutations/SignupUser'
 
 
-//import { GC_USER_ID, GC_AUTH_TOKEN } from '../../constants'
 export default 
 function Login(props) {
 
   const context = useContext(AppContext)
-  const cbLogin = useCallback( (login, email, password, name, ui_callbackError) => {
-    if (login) {
-      AuthenticateUserMutation.commit(email, password, (id, token, errors) => {
-        context.login(id, token)
-        props.history.push(`/`)
-      })
-    } else {
-      SignupUserMutation.commit(email, password, name, (id, token, errors) => {
-        if (errors) {
-          //this.setState({ errors: errors })
-          ui_callbackError(errors)
-          return
-        }
-        context.login(id, token)
-        props.history.push(`/`)
-      })
-    }      
-  }, [true] )
+
+  const cbLogin = async (login, email, password, name, ui_callbackError) => {
+
+    let result = {}
+    try {
+      if (login) {
+        result = await AuthenticateUserMutation.commit(email, password)
+      } else {
+        result = await SignupUserMutation.commit(email, password, name)
+      }
+    } catch (e) {
+      result['errors'] = e
+    }
+    console.log('cbLogin')
+    console.log(result)
+
+    if (result.errors) {
+      ui_callbackError(result.errors)
+      return
+    }
+
+    context.login( result.data.id, result.data.token )
+    props.history.push(`/`)
+  }
 
   return <LoginView submit={cbLogin} />
 }
