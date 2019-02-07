@@ -34,6 +34,18 @@ function commit( email, password, name ) {
   })
 }
 
+const wrapErrorAsync = async ( ...rest) => {
+  let result = {}
+
+  try {
+    result = await commit.apply( null, rest )
+  } catch (e) {
+    result['errors'] = e
+  }
+
+  return result
+}
+
 export default {
-  commit
+  commit: wrapErrorAsync
 }

@@ -1,9 +1,49 @@
-import React from 'react'
+import React, { useContext, /*useMemo,*/ useCallback } from 'react'
 
-export default (props) => (
-  <div>
-    <div>
-      {props.data.description} ({props.data.url})
-    </div>
-  </div>
-)
+import CreateVoteMutation from '../../mutations/CreateVote'
+import {AppContext} from '../../App/context';
+
+import LinkView from './View'
+
+
+export default 
+function Link(props) {
+
+  const context = useContext(AppContext)
+
+  const voteForLink = useCallback( async () => {
+    //const userId = localStorage.getItem(GC_USER_ID)
+    const userId = context.loggedUserId
+    if (!userId) {
+      console.log(`Can't vote without user ID`)
+      return
+    }
+
+    let result = CreateVoteMutation.commit(props.data.id)
+    if (result.errors) {
+      // ui_callbackError(result.errors)
+      // return
+    }
+  }, [context, props ])
+
+  // const memoizedProps = useMemo(() => ({
+  //   index: props.index + 1,
+  //   url: props.data.url,
+  //   description: props.data.description,
+  //   votes: props.data.votes.length,
+  //   postedByName: props.data.postedBy && props.data.postedBy.name,
+  //   createdAt: props.data.createdAt,
+  //   //linkId: props.link.id,
+  // }), [props.data] );
+  const memoizedProps = {
+    index: props.index + 1,
+    url: props.data.url,
+    description: props.data.description,
+    votes: props.data.votes.length,
+    postedByName: props.data.postedBy && props.data.postedBy.name,
+    createdAt: props.data.createdAt,
+    //linkId: props.link.id,
+  }
+
+  return <LinkView userId={context.loggedUserId} voteForLink={voteForLink} data={memoizedProps} />
+}

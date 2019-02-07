@@ -5,7 +5,7 @@ import gql from 'graphql-tag'
 import LinkListView from './View'
 
 
-const FEED_QUERY = gql`
+export const FEED_QUERY = gql`
   {
     feed {
       links {
@@ -13,6 +13,16 @@ const FEED_QUERY = gql`
         createdAt
         url
         description
+        postedBy {
+          id
+          name
+        }
+        votes {
+          id
+          user {
+            id
+          }
+        }        
       }
     }
   }

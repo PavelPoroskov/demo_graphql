@@ -5,7 +5,7 @@ import {AppContext} from '../../App/context'
 //import WaitResultHoc from '../WaitResultHoc'
 import LinkListView from './View'
 
-const FEED_QUERY = gql`
+export const FEED_QUERY = gql`
   {
     feed {
       links {
@@ -13,6 +13,16 @@ const FEED_QUERY = gql`
         createdAt
         url
         description
+        postedBy {
+          id
+          name
+        }
+        votes {
+          id
+          user {
+            id
+          }
+        }        
       }
     }
   }
@@ -30,19 +40,19 @@ const useEffectQueryGraphQl = (_FEED_QUERY, variables={}, path=(data) => data ) 
 
   async function asyncFunction() {
     try {
-      console.log(`useCustomEffectQueryGraphQl: start`)
+      //console.log(`useCustomEffectQueryGraphQl: start`)
       setLoading(true)
       let result = await context.client.query({
         query: FEED_QUERY,
         variables
       })
-      console.log(`useCustomEffectQueryGraphQl: end data`)
-      console.log(result)
+      //console.log(`useCustomEffectQueryGraphQl: end data`)
+      //console.log(result)
       setLoading(false)
       //setData(result)
       setData( path(result.data) ) 
     }catch (e) {
-      console.log(`useCustomEffectQueryGraphQl: end Error`)
+      //console.log(`useCustomEffectQueryGraphQl: end Error`)
       setLoading(false)
       setError(e)
     }
@@ -66,16 +76,16 @@ const hocWaitResult = (Component) => (props) => {
   //const { loading, error, ...rest } = props
 
   if (loading) {
-    console.log(`hocWaitResult: loading`)
+    //console.log(`hocWaitResult: loading`)
     return <div>Loading...</div>
   }
   if (error) {
-    console.log(`hocWaitResult: error`)
+    //console.log(`hocWaitResult: error`)
     return <div>{`Error: ${error}`}</div>
   }
 
   if (data) {
-    console.log(`hocWaitResult: result`)
+    //console.log(`hocWaitResult: result`)
     return <Component data={data} {...rest}/>
   }
 

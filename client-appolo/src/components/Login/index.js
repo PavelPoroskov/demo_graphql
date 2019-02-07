@@ -13,18 +13,15 @@ function Login(props) {
 
   const context = useContext(AppContext)
 
-  const cbLogin = async (login, email, password, name, ui_callbackError) => {
+  const cbLogin = (login, email, password, name, ui_callbackError) => {
 
     let result = {}
-    try {
-      if (login) {
-        result = await AuthenticateUserMutation.commit(email, password)
-      } else {
-        result = await SignupUserMutation.commit(email, password, name)
-      }
-    } catch (e) {
-      result['errors'] = e
+    if (login) {
+      result = AuthenticateUserMutation.commit(email, password)
+    } else {
+      result = SignupUserMutation.commit(email, password, name)
     }
+
     console.log('cbLogin')
     console.log(result)
 

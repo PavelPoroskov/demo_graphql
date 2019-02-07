@@ -25,13 +25,14 @@ function CreateLin(props) {
   //   }
   // }      
   // , [true] )
-  const createLink = async (url, description) => {
-    try {
-      await CreateLinkMutation.commit( url, description )
-      props.history.push('/')
-    } catch(e) {
-      //...
+  const createLink = (url, description) => {
+    let result = CreateLinkMutation.commit( url, description )
+    if (result.errors) {
+      return
     }
+    //console.log('create link props.history.push() before')
+    props.history.push('/')
+    //console.log('create link props.history.push() after')
   }
 
   return <CreateLinkView createLink={createLink} />

@@ -4,5 +4,5 @@ import Link from '../Link'
 
 
 export default (props) => (
-  <div>{props.data.map(obj => <Link key={obj.id} data={obj} />)}</div>
+  <div>{props.data.map( (obj, index) => <Link key={obj.id} data={obj} index={index}/>)}</div>
 )

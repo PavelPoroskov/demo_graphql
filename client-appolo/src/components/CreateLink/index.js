@@ -9,11 +9,11 @@
 // not use recompose
 // three files: 'index2' (CreateLink), 'mutations/CreateLink', and 'View.js' (CreateLinkView) 
 // ++: more modular
-// import CreateLink from './index2ClientMutateFile'
+import CreateLink from './index2ClientMutateFile'
 
 // // not use recompose
 // // two files: 'index3' (CreateLink), and 'View.js' (CreateLinkView) 
-import CreateLink from './index3ClientMutate'
+//import CreateLink from './index3ClientMutate'
 
 
 //which best for error processing?
