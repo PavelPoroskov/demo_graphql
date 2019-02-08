@@ -11,10 +11,17 @@ function HeaderView(props) {
         <Link to='/' className='ml1 no-underline black'>
           <div className='fw7 mr1'>Hacker News</div>
         </Link>
+        <Link to="/" className="ml1 no-underline black">
+          all
+        </Link>        
+        <div className="ml1">|</div>
+        <Link to="/search" className="ml1 no-underline black">
+          search
+        </Link>        
         {props.userId &&
         <div className='flex'>
           <div className='ml1'>|</div>
-          <Link to='/create' className='ml1 no-underline black'>Add</Link>
+          <Link to='/create' className='ml1 no-underline black'>add</Link>
         </div>
         }
       </div>
