@@ -1,9 +1,9 @@
-import React, {useState, useEffect, useContext} from 'react'
+import React, {useState, useEffect, useRef} from 'react'
 import gql from 'graphql-tag'
+import { withApollo } from 'react-apollo'
 
-import {AppContext} from '../../App/context'
-//import WaitResultHoc from '../WaitResultHoc'
 import LinkListView from './View'
+
 
 export const FEED_QUERY = gql`
   {
@@ -28,29 +28,65 @@ export const FEED_QUERY = gql`
   }
 `
 
-const useEffectQueryGraphQl = (_FEED_QUERY, variables={}, path=(data) => data ) => {
+const useEffectApolloQuery = ( client, _FEED_QUERY, variables={}, path=(data) => data ) => {
 
   const [data, setData] = useState(undefined)
   const [error, setError] = useState(undefined)
   const [loading, setLoading] = useState(undefined)
+  //const [timestamp, setTimestamp] = useState(undefined)
 
-  const context = useContext(AppContext)
-
-  //const arVariables = Object.keys(variables).map( key => variables[key] )
+  const savedSubscription = useRef();
 
   async function asyncFunction() {
     try {
       //console.log(`useCustomEffectQueryGraphQl: start`)
       setLoading(true)
-      let result = await context.client.query({
+      const observable = client.watchQuery({
         query: FEED_QUERY,
         variables
       })
-      //console.log(`useCustomEffectQueryGraphQl: end data`)
-      //console.log(result)
-      setLoading(false)
-      //setData(result)
-      setData( path(result.data) ) 
+
+      //console.log('watchQuery subscribe')
+      savedSubscription.current = observable.subscribe(
+        resultNext => {
+          // console.log(`watchQuery: next()`)
+          // console.log(resultNext)
+
+          //const resultNext = observable.getCurrentResult()
+          //if (loading) {
+            // setLoading(false)
+          //}
+          //setData(result)
+          
+          let newData = path(resultNext.data)
+          if (Array.isArray(newData)) {
+            //newData = [ ...newData ]
+            newData = newData.slice( )
+          }else if ((!!newData) && (newData.constructor === Object)) {
+            //newData = { ...newData0 }
+            newData = Object.assign( {}, newData )
+          }
+
+          setData( newData ) 
+          setLoading(false)
+          //setTimestamp(Date.now())
+        },
+        err => {
+          //setError(e)
+        },
+        () => {
+          //console.log('watchQuery finished')
+        }
+      )
+
+      // const result = await observable.result()
+
+      // console.log(`watchQuery: result()`)
+      // console.log(result)
+
+      // setLoading(false)
+      // //setData(result)
+      // setData( path(result.data) ) 
     }catch (e) {
       //console.log(`useCustomEffectQueryGraphQl: end Error`)
       setLoading(false)
@@ -60,13 +96,17 @@ const useEffectQueryGraphQl = (_FEED_QUERY, variables={}, path=(data) => data ) 
 
   useEffect( () => {
     asyncFunction()
+    return () => {
+      //console.log('watchQuery unsubscribe')
+      savedSubscription.current.unsubscribe()
+    }
   }, Object.keys(variables).map( key => variables[key] ) )
-  //}, [] )
 
   return {
     loading,
     error,
     data,
+    //timestamp
   }
 }
 
@@ -98,10 +138,16 @@ const EnhancedLinkListView = hocWaitResult(LinkListView)
 
 const LinkList = (props) => {
   
-  const propsLoading = useEffectQueryGraphQl( FEED_QUERY, {}, (data) => data.feed.links )
+  const propsLoading = useEffectApolloQuery( props.client, FEED_QUERY, {}, (data) => data.feed.links )
 
-//  return <LinkListView data={data.feed.links} />
+  // console.log(`LinkList`)
+  // console.log(propsLoading.data)
   return <EnhancedLinkListView {...propsLoading} />
+//  return (
+//    <React.Fragment>
+//      () => <EnhancedLinkListView {...propsLoading} />
+//    <React.Fragment/>
+//   )
 }
 
-export default LinkList
+export default withApollo(LinkList)

@@ -44,6 +44,10 @@ function Link(props) {
     createdAt: props.data.createdAt,
     //linkId: props.link.id,
   }
+  // console.log(`Link`)
+  // console.log(props.index + 1)
+  // console.log(memoizedProps)
+  // console.log(props.data.votes.length)
 
   return <LinkView userId={context.loggedUserId} voteForLink={voteForLink} data={memoizedProps} />
 }
