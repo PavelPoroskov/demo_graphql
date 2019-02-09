@@ -3,7 +3,7 @@ import React from 'react'
 import { timeDifferenceForDate } from '../../utils'
 
 
-export default (props) => {
+export default function LinkView (props) {
   const {userId, data: { url, description, index, votes, postedByName, createdAt }, voteForLink} = props
 
   return (

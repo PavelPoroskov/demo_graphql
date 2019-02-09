@@ -19,7 +19,7 @@ function Link(props) {
       return
     }
 
-    let result = CreateVoteMutation.commit(props.data.id)
+    let result = await CreateVoteMutation.commit(props.data.id)
     if (result.errors) {
       // ui_callbackError(result.errors)
       // return

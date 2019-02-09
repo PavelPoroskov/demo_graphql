@@ -1,7 +1,9 @@
 import React from 'react'
 
-export default (props) => (
+const ResultError = (props) => (
   <div>
     Error on fetch
   </div>
 )
+
+export default ResultError

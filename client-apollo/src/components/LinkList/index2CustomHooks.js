@@ -96,9 +96,12 @@ const hocWaitResult = (Component) => (props) => {
 
 const EnhancedLinkListView = hocWaitResult(LinkListView)
 
-export default (props) => {
+const LinkList = (props) => {
+  
   const propsLoading = useEffectQueryGraphQl( FEED_QUERY, {}, (data) => data.feed.links )
 
 //  return <LinkListView data={data.feed.links} />
   return <EnhancedLinkListView {...propsLoading} />
 }
+
+export default LinkList

@@ -28,7 +28,7 @@ export const FEED_QUERY = gql`
   }
 `
 
-export default (props) => (
+const LinkList = (props) => (
   <Query query={FEED_QUERY}>
     {({ loading, error, data }) => {
       if (loading) return <div>Fetching</div>
@@ -38,3 +38,5 @@ export default (props) => (
     }}
   </Query>
 )
+
+export default LinkList

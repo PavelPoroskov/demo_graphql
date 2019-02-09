@@ -1,5 +1,5 @@
 
-export default (Component) => (props) => {
+const WaitResultHoc = (Component) => (props) => {
 
   const { loading, error, data,  ...rest } = props
 
@@ -12,3 +12,5 @@ export default (Component) => (props) => {
 
   return <Component data={data} {...rest}/>
 }
+
+export default WaitResultHoc

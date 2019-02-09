@@ -12,7 +12,7 @@ const POST_MUTATION = gql`
   }
 `
 
-export default (props) => {
+export default function CreateLink (props) {
 
   const [description, setDescription] = useState('')
   const [url, setUrl] = useState('')

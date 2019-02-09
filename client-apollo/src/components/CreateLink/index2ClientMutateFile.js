@@ -25,8 +25,8 @@ function CreateLin(props) {
   //   }
   // }      
   // , [true] )
-  const createLink = (url, description) => {
-    let result = CreateLinkMutation.commit( url, description )
+  const createLink = async (url, description) => {
+    let result = await CreateLinkMutation.commit( url, description )
     if (result.errors) {
       return
     }

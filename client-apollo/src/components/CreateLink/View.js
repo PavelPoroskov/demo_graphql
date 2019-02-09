@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-export default (props) => {
+export default function CreateLinkView(props) {
 
   const [description, setDescription] = useState('')
   const [url, setUrl] = useState('')
