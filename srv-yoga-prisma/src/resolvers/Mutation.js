@@ -11,6 +11,9 @@ async function signup(parent, args, context, info) {
 
   // 3
   const token = jwt.sign({ userId: user.id }, APP_SECRET)
+  context.req.session.user = {
+    id: user.id
+  };
 
   // 4
   return {
@@ -33,12 +36,31 @@ async function login(parent, args, context, info) {
   }
 
   const token = jwt.sign({ userId: user.id }, APP_SECRET)
+  //console.log('login session')
+  //console.log(context.req.session)
+  context.req.session.user = {
+    id: user.id
+  }
+
 
   // 3
   return {
     token,
     user,
   }
+}
+
+async function logout(parent, args, context, info) {
+  // 1
+
+  if (context.request.session.user) {
+    const user = context.request.session.user
+    userId = context.request.session.user.id
+    
+    //return userId
+  }
+
+  return true
 }
 
 function post(parent, args, context, info) {
@@ -96,6 +118,7 @@ const deleteLink = (root, args, context) => {
 module.exports = {
   signup,
   login,
+  //logout,
   post,
   vote,
 

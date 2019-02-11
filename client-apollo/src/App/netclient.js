@@ -9,16 +9,21 @@ import { getCurrentUserIdToken, setCurrentUserIdToken } from './userauth'
 const client = new ApolloClient({
   //uri: 'http://localhost:4000'
   uri: process.env.REACT_APP_GRAPHQL_ENDPOINT,
-  request: async operation => {
-    const {userToken} = getCurrentUserIdToken()
-    if (userToken) {
-      operation.setContext({
-        headers: {
-          'Authorization': `Bearer ${userToken}`
-        }
-      });
-    }
-  },  
+  credentials: 'include',
+  // fetchOptions: {
+  //   credentials: 'include'
+  // },
+
+  // request: async operation => {
+  //   const {userToken} = getCurrentUserIdToken()
+  //   if (userToken) {
+  //     operation.setContext({
+  //       headers: {
+  //         'Authorization': `Bearer ${userToken}`
+  //       }
+  //     });
+  //   }
+  // },  
 });
 
 export default {
