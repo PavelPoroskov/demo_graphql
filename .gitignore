@@ -1,5 +1,11 @@
+**/*.crt
+**/*.key
+**/*.pem
+#**/*.env
+
 **/node_modules
 **/__generated__
+
 **/semantic
 **/*.db
 #*.txt
@@ -7,11 +13,7 @@
 **/dist
 */.gradle
 */.idea
-cmdK.bat
 **/bundle.js
 **/bundle.map
-**/*.crt
-**/*.key
-**/*.pem
 **/*.jpeg
 **/*.jpg
