@@ -11,9 +11,11 @@ async function signup(parent, args, context, info) {
 
   // 3
   const token = jwt.sign({ userId: user.id }, APP_SECRET)
-  context.req.session.user = {
-    id: user.id
-  };
+
+  // //use_coockie
+  // context.req.session.user = {
+  //   id: user.id
+  // };
 
   // 4
   return {
@@ -36,12 +38,11 @@ async function login(parent, args, context, info) {
   }
 
   const token = jwt.sign({ userId: user.id }, APP_SECRET)
-  //console.log('login session')
-  //console.log(context.req.session)
-  context.req.session.user = {
-    id: user.id
-  }
-
+  
+  // //use_coockie
+  // context.req.session.user = {
+  //   id: user.id
+  // }
 
   // 3
   return {
@@ -50,18 +51,29 @@ async function login(parent, args, context, info) {
   }
 }
 
-async function logout(parent, args, context, info) {
-  // 1
+// //test scenario
+// login as user1
+// logout
+// login as user2
 
-  if (context.request.session.user) {
-    const user = context.request.session.user
-    userId = context.request.session.user.id
-    
-    //return userId
-  }
+// login as user1
+// login as user2
 
-  return true
-}
+// login as user1
+// close app-tab
+// reopen app-tab (want isLoging) 
+
+
+// //use_coockie
+// async function logout(parent, args, context, info) {
+
+//   if (context.req.session.user) {
+//     delete context.req.session
+//     //context.req.session = null
+//   }
+
+//   return true
+// }
 
 function post(parent, args, context, info) {
   const userId = getUserId(context)

@@ -1,6 +1,7 @@
 const { GraphQLServer } = require('graphql-yoga')
-const session = require('express-session');
-const ms = require('ms')
+// //use_coockie
+// const session = require('express-session');
+// const ms = require('ms')
 
 const { prisma } = require('./generated/prisma-client')
 
@@ -33,32 +34,37 @@ const server = new GraphQLServer({
   },
 })
 
-server.express.use(session({
-  name: 'qid',
-  secret: `some-random-secret-here`,
-  resave: true,
-  saveUninitialized: true,
-  //'trust proxy': 1,
-  cookie: {
-    httpOnly: false,
-    //httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    maxAge: ms('1d'), // insted of 'expires',
-    //sameSite: 'strict',
-  },
-}))
+// //use_coockie
+// server.express.use(session({
+//   name: 'qid',
+//   secret: `some-random-secret-here`,
+//   resave: true,
+// //  saveUninitialized: true,
+//   saveUninitialized: false,
+//   //'trust proxy': 1,
+//   unset: 'destroy',
+//   cookie: {
+//     httpOnly: false, //only debug
+//     //httpOnly: true,
+//     secure: process.env.NODE_ENV === 'production',
+//     maxAge: ms('1d'), // insted of 'expires',
+//     //sameSite: 'strict',
+//   },
+// }))
 
-const opts = {
-  port: 4000,
-  cors: {
-    credentials: true,
-    origin: ['http://localhost:3000'] // your frontend url.
-  },
-  // https: {
-    // cert: string | Buffer,
-    // key: string | Buffer
-  // }
-};
+let opts = {}
+// //use_coockie
+// opt = Object.assign( opt, {
+//   port: 4000,
+//   cors: {
+//     credentials: true,
+//     origin: ['http://localhost:3000'] // your frontend url.
+//   },
+//   // https: {
+//     // cert: string | Buffer,
+//     // key: string | Buffer
+//   // }
+// })
 
 server.start( opts, () => console.log(`Server is running on http://localhost:4000`) )
 
