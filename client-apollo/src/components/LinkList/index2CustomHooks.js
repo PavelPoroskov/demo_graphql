@@ -68,11 +68,13 @@ const useEffectApolloQuery = ( client, _FEED_QUERY, variables={}, path=(data) =>
           }
 
           setData( newData ) 
+          setError(undefined)
           setLoading(false)
           //setTimestamp(Date.now())
         },
         err => {
-          //setError(e)
+          setError(err)
+          setLoading(false)
         },
         () => {
           //console.log('watchQuery finished')
