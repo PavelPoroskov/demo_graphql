@@ -26,10 +26,10 @@ const server = new GraphQLServer({
   resolvers,
   context: request => {
     return {
-      //...request,
-      //request,
-      req: request.request,
+      ...request,
       prisma,
+      //use_coockie
+      //req: request.request,
     }
   },
 })

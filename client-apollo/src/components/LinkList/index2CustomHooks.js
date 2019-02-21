@@ -28,36 +28,75 @@ export const FEED_QUERY = gql`
   }
 `
 
-const useEffectApolloQuery = ( client, _FEED_QUERY, variables={}, path=(data) => data ) => {
+const NEW_LINKS_SUBSCRIPTION = gql`
+  subscription {
+    newLink {
+      id
+      createdAt
+      url
+      description
+      postedBy {
+        id
+        name
+      }
+      votes {
+        id
+        user {
+          id
+        }
+      }
+    }
+  }
+`
+
+const NEW_VOTES_SUBSCRIPTION = gql`
+  subscription {
+    newVote {
+      id
+      link {
+        id
+        url
+        description
+        createdAt
+        postedBy {
+          id
+          name
+        }
+        votes {
+          id
+          user {
+            id
+          }
+        }
+      }
+      user {
+        id
+      }
+    }
+  }
+`
+const useEffectApolloQuery = ( client, _FEED_QUERY, variables={}, path=(data) => data, _arSubscriptions=[] ) => {
 
   const [data, setData] = useState(undefined)
   const [error, setError] = useState(undefined)
   const [loading, setLoading] = useState(undefined)
-  //const [timestamp, setTimestamp] = useState(undefined)
 
-  const savedSubscription = useRef();
+  const obsvSubsriptions = useRef( [] );
 
   async function asyncFunction() {
     try {
-      //console.log(`useCustomEffectQueryGraphQl: start`)
+      //console.log('watchQuery subscribe')
       setLoading(true)
-      const observable = client.watchQuery({
+      const observableMain = client.watchQuery({
         query: FEED_QUERY,
         variables
       })
 
-      //console.log('watchQuery subscribe')
-      savedSubscription.current = observable.subscribe(
+      const subscriptionMain = observableMain.subscribe(
         resultNext => {
-          // console.log(`watchQuery: next()`)
-          // console.log(resultNext)
+          //console.log(`watchQuery: next()`)
+          //console.log(resultNext)
 
-          //const resultNext = observable.getCurrentResult()
-          //if (loading) {
-            // setLoading(false)
-          //}
-          //setData(result)
-          
           let newData = path(resultNext.data)
           if (Array.isArray(newData)) {
             //newData = [ ...newData ]
@@ -70,6 +109,26 @@ const useEffectApolloQuery = ( client, _FEED_QUERY, variables={}, path=(data) =>
           setData( newData ) 
           setError(undefined)
           setLoading(false)
+
+          if (Array.isArray(_arSubscriptions) && obsvSubsriptions.current.length === 1) {
+            for (let subscribtion of _arSubscriptions) {
+//              console.log('Subscription level 2: begin')
+              const obserableSub = client.subscribe({
+                query: subscribtion.query
+                //variables
+              })
+              const subscriptionSlave = obserableSub.subscribe(
+                resultNextSub => {
+                  // console.log('Subscription level 2: next')
+                  // console.log(resultNextSub)
+                  if (subscribtion.fnToChache) {
+                    subscribtion.fnToChache(resultNextSub)
+                  }
+                }
+              )
+              obsvSubsriptions.current.push(subscriptionSlave)
+            }
+          } 
           //setTimestamp(Date.now())
         },
         err => {
@@ -80,17 +139,10 @@ const useEffectApolloQuery = ( client, _FEED_QUERY, variables={}, path=(data) =>
           //console.log('watchQuery finished')
         }
       )
+      obsvSubsriptions.current.push(subscriptionMain)
 
-      // const result = await observable.result()
-
-      // console.log(`watchQuery: result()`)
-      // console.log(result)
-
-      // setLoading(false)
-      // //setData(result)
-      // setData( path(result.data) ) 
     }catch (e) {
-      //console.log(`useCustomEffectQueryGraphQl: end Error`)
+
       setLoading(false)
       setError(e)
     }
@@ -100,7 +152,10 @@ const useEffectApolloQuery = ( client, _FEED_QUERY, variables={}, path=(data) =>
     asyncFunction()
     return () => {
       //console.log('watchQuery unsubscribe')
-      savedSubscription.current.unsubscribe()
+      for (let obsvSubscription of obsvSubsriptions.current) {
+        //console.log('UNsubscribe')
+        obsvSubscription.unsubscribe()
+      }
     }
   }, Object.keys(variables).map( key => variables[key] ) )
 
@@ -138,18 +193,33 @@ const hocWaitResult = (Component) => (props) => {
 
 const EnhancedLinkListView = hocWaitResult(LinkListView)
 
+//https://www.apollographql.com/docs/react/api/apollo-client.html#ApolloClient.subscribe
+
 const LinkList = (props) => {
   
-  const propsLoading = useEffectApolloQuery( props.client, FEED_QUERY, {}, (data) => data.feed.links )
+  const propsLoading = useEffectApolloQuery( props.client, FEED_QUERY, {}, (data) => data.feed.links, [ 
+    {
+      query: NEW_VOTES_SUBSCRIPTION
+      //fnToChache
+      //dont need fnToChache(). Perhaps result = {data: {newVote: {link: {id, votes}}}}
+      // link: {id, votes} go to cache auto?
+    },
+    {
+      query: NEW_LINKS_SUBSCRIPTION,
+      //need fnToChache(), result = {data:{ newLink: {id,...} }
+      fnToChache: result => {
+        // console.log('fnToChache')
+        // console.log(props)
+        const data = props.client.readQuery({ query: FEED_QUERY })
 
-  // console.log(`LinkList`)
-  // console.log(propsLoading.data)
+        data.feed.links.push(result.data.newLink)
+
+        props.client.writeQuery({ query: FEED_QUERY, data })
+      }
+    },
+  ] )
+
   return <EnhancedLinkListView {...propsLoading} />
-//  return (
-//    <React.Fragment>
-//      () => <EnhancedLinkListView {...propsLoading} />
-//    <React.Fragment/>
-//   )
 }
 
 export default withApollo(LinkList)
