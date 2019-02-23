@@ -37,7 +37,7 @@ function App() {
       netclient.setCurrentUserIdToken('', '')
       setLoggedUserId('')
     },
-    client: netclient.client,
+    //client: netclient.client,
     // setErrors: (arErrors) => {
     //   setErrors(true)
     // }
@@ -54,11 +54,12 @@ function App() {
             <div className='ph3 pv1 background-gray'>
             <ErrorBoundary>
               <Switch>
-                <Route exact path='/' component={LinkList}/>
+                <Route exact path='/page/:page' component={LinkList}/>
+                <Route exact path='/top' component={LinkList}/>
                 <Route exact path='/search' component={Search}/>
                 <Route exact path='/login' component={Login}/>
                 <PrivateRoute exact path='/create' component={CreateLink}/>
-                <Redirect to='/'/>
+                <Redirect to='/page/1'/>
               </Switch>
             </ErrorBoundary>
             </div>

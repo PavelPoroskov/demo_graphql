@@ -36,11 +36,10 @@ function commit( url, description ) {
       //console.log('CreateLink, update, start')      
       const data = store.readQuery({ query: FEED_QUERY })
 
-      data.feed.links.unshift(result.data.post)
+      //data.feed.links.unshift(result.data.post)
+      data.feed.links.push(result.data.post)
 
       store.writeQuery({ query: FEED_QUERY, data })
-      //console.log(data)      
-      //console.log('CreateLink, update, end')      
     }
   })
   // .then( () => {

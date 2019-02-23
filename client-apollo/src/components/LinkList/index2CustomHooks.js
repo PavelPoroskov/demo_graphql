@@ -4,10 +4,11 @@ import { withApollo } from 'react-apollo'
 
 import LinkListView from './View'
 
+const LINKS_PER_PAGE = 1
 
 export const FEED_QUERY = gql`
-  {
-    feed {
+  query FeedQuery($first: Int, $after: String, $orderBy: LinkOrderByInput) {
+    feed(first: $first, after: $after, orderBy: $orderBy) {
       links {
         id
         createdAt
@@ -24,6 +25,7 @@ export const FEED_QUERY = gql`
           }
         }        
       }
+      count
     }
   }
 `
@@ -168,6 +170,11 @@ const useEffectApolloQuery = ( client, _FEED_QUERY, variables={}, path=(data) =>
 }
 
 const hocWaitResult = (Component) => (props) => {
+  //-- blink on next page
+  // -> draw next page with wait (update page with timeout)
+  //      draw prev page with fade
+  //      option 1) new data recieved before timeout => draw page with new data
+  //      option 2) timeout end => draw loading, after data recieved => draw page with new data
 
   const { loading, error, data,  ...rest } = props
   //const { loading, error, ...rest } = props
@@ -197,29 +204,74 @@ const EnhancedLinkListView = hocWaitResult(LinkListView)
 
 const LinkList = (props) => {
   
-  const propsLoading = useEffectApolloQuery( props.client, FEED_QUERY, {}, (data) => data.feed.links, [ 
-    {
-      query: NEW_VOTES_SUBSCRIPTION
-      //fnToChache
-      //dont need fnToChache(). Perhaps result = {data: {newVote: {link: {id, votes}}}}
-      // link: {id, votes} go to cache auto?
-    },
-    {
-      query: NEW_LINKS_SUBSCRIPTION,
-      //need fnToChache(), result = {data:{ newLink: {id,...} }
-      fnToChache: result => {
-        // console.log('fnToChache')
-        // console.log(props)
-        const data = props.client.readQuery({ query: FEED_QUERY })
+  const [after, setAfter] = useState(null)
 
-        data.feed.links.push(result.data.newLink)
+  const nPage = parseInt(props.match.params.page, 10)
+  const queryVariables = {
+    //skip: (iPage - 1) * LINKS_PER_PAGE,
+    after: after,
+    first: LINKS_PER_PAGE,
+    orderBy: 'createdAt_DESC'
+  }
 
-        props.client.writeQuery({ query: FEED_QUERY, data })
-      }
-    },
-  ] )
+  //{ loading, error, data } = 
+  const propsLoading = useEffectApolloQuery( props.client, FEED_QUERY, 
+    queryVariables, 
+    (data) => data.feed.links, 
+    [ 
+      {
+        query: NEW_VOTES_SUBSCRIPTION
+        //fnToChache
+        //dont need fnToChache(). Perhaps result = {data: {newVote: {link: {id, votes}}}}
+        // link: {id, votes} go to cache auto?
+      },
+      {
+        query: NEW_LINKS_SUBSCRIPTION,
+        //need fnToChache(), result = {data:{ newLink: {id,...} }
+        fnToChache: result => {
+          // console.log('fnToChache')
+          // console.log(props)
+          const data = props.client.readQuery({ query: FEED_QUERY, variables: queryVariables })
 
-  return <EnhancedLinkListView {...propsLoading} />
+          data.feed.links.push(result.data.newLink)
+
+          props.client.writeQuery({ query: FEED_QUERY, data, variables: queryVariables })
+        }
+      },
+    ] 
+  )
+
+
+  const _previousPage = () => {
+    if (1 < nPage) {
+      const previousPage = nPage - 1
+      this.props.history.push(`/new/${previousPage}`)
+    }
+  }
+  const _nextPage = () => {
+    // if (iPage <= data.feed.count / LINKS_PER_PAGE) {
+    //   const nextPage = iPage + 1
+    //   this.props.history.push(`/new/${nextPage}`)
+    // }
+    let ar = propsLoading.data
+    if (ar && Array.isArray(ar) && 0 < ar.length) {
+      setAfter(ar[ar.length-1].id)
+    }
+  }
+
+  return (
+    <React.Fragment >
+      <EnhancedLinkListView {...propsLoading} nPage={nPage}/>
+      <div className="flex ml4 mv3 gray">
+        <div className="pointer mr2" onClick={_previousPage}>
+          Previous
+        </div>
+        <div className="pointer" onClick={() => _nextPage()}>
+          Next
+        </div>
+      </div>
+    </React.Fragment>
+  )
 }
 
 export default withApollo(LinkList)

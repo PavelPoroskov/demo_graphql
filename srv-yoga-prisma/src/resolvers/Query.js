@@ -10,18 +10,30 @@ async function feed(parent, args, context, info) {
     ],
   } : {}
 
-  const links = await context.prisma.links({
+  const awLinks = context.prisma.links({
     where,
     after: args.after, 
     first: args.first,
     orderBy: args.orderBy,
   })
-  const count = await context.prisma
+  const awCount = context.prisma
     .linksConnection({
       where,
     })
     .aggregate()
     .count()
+  // const awCount = context.prisma.linksConnection({ where, })
+  //   .then( res => res.aggregate() )
+  //   .then( res => res.count )
+
+  //const links = await awLinks
+  //const count = await awCount
+
+  let [links, count] = await Promise.all([awLinks, awCount]);
+  // console.log('uery/feed/count')
+  // console.log(count)
+  // console.log(links)
+
   return {
     links,
     count,

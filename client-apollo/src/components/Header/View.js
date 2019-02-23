@@ -15,6 +15,10 @@ function HeaderView(props) {
           all
         </Link>        
         <div className="ml1">|</div>
+        <Link to="/top" className="ml1 no-underline black">
+          top 10
+        </Link>
+        <div className="ml1">|</div>
         <Link to="/search" className="ml1 no-underline black">
           search
         </Link>        
