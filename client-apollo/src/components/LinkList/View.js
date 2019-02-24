@@ -7,11 +7,10 @@ const LinkListView = (props) => {
 
   // console.log(`LinkListView`)
   // console.log(props)
-  let nPage = props.nPage || 1
-  let iPage = nPage - 1
+  let iTotal = props.iTotal || 0
 
   return (
-    <div>{props.data.map( (obj, index) => <Link key={obj.id} data={obj} index={iPage + index}/>)}</div>
+    <div>{props.data.map( (obj, index) => <Link key={obj.id} data={obj} index={iTotal + index}/>)}</div>
   )
 }
 

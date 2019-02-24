@@ -8,15 +8,37 @@ enum LinkOrderByInput {
   createdAt_DESC
 }
 
+
+
 type Query {
   info: String!
   feed(filter: String, after: String, first: Int, orderBy: LinkOrderByInput): Feed!
+  feedConnection(filter: String, after: String, first: Int, before: String, last: Int, orderBy: LinkOrderByInput): LinkConnection!
   # Fetch a single link by its `id`
   link(id: ID!): Link
 }
 type Feed {
   links: [Link!]!
   count: Int!
+}
+
+type AggregateLink {
+  count: Int!
+}
+type LinkEdge {
+  node: Link!
+  cursor: String!
+}
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+  endCursor: String
+}
+type LinkConnection {
+  pageInfo: PageInfo!
+  edges: [LinkEdge]!
+  aggregate: AggregateLink!
 }
 
 type AuthPayload {

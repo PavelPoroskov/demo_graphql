@@ -22,22 +22,29 @@ async function feed(parent, args, context, info) {
     })
     .aggregate()
     .count()
-  // const awCount = context.prisma.linksConnection({ where, })
-  //   .then( res => res.aggregate() )
-  //   .then( res => res.count )
-
-  //const links = await awLinks
-  //const count = await awCount
 
   let [links, count] = await Promise.all([awLinks, awCount]);
-  // console.log('uery/feed/count')
-  // console.log(count)
-  // console.log(links)
 
   return {
     links,
     count,
   }  
+}
+async function feedConnection(parent, _args, context, info) {
+  const {filter, ...restArgs} = _args
+  const where = filter ? {
+    OR: [
+      { description_contains: filter },
+      { url_contains: filter },
+    ],
+  } : {}
+
+  const linksConnection = await context.prisma.linksConnection({
+    where,
+    ...restArgs
+  })
+
+  return linksConnection
 }
 function link(parent, args, context, info) {
   return context.prisma.link({ id: args.id })
@@ -46,5 +53,6 @@ function link(parent, args, context, info) {
 module.exports = {
   info,
   feed,
+  feedConnection,
   link,
 }
