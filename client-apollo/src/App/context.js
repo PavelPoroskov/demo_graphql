@@ -16,5 +16,5 @@ export const AppContext = React.createContext({
   setErrors: (arErrors) => {
   	
   },
-  client: {},
+//  client: {},
 });

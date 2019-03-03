@@ -12,7 +12,7 @@ enum LinkOrderByInput {
 
 type Query {
   info: String!
-  feed(filter: String, after: String, first: Int, orderBy: LinkOrderByInput): Feed!
+  feed(filter: String, skip: Int, first: Int, after: String, orderBy: LinkOrderByInput): Feed!
   feedConnection(filter: String, after: String, first: Int, before: String, last: Int, orderBy: LinkOrderByInput): LinkConnection!
   # Fetch a single link by its `id`
   link(id: ID!): Link

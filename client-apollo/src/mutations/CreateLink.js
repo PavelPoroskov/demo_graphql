@@ -35,6 +35,7 @@ function commit( url, description ) {
     update: (store, result) => {
       //console.log('CreateLink, update, start')      
       const data = store.readQuery({ query: FEED_QUERY })
+      //-- get erros without variables for pagination {skip, first}
 
       //data.feed.links.unshift(result.data.post)
       data.feed.links.push(result.data.post)

@@ -1,3 +1,11 @@
+03/03/2019 ?? subscibtion (new link) && pagination
+tutorial) 
+	author) add link in the begining of first page, limit of pageSize is not violated
+	subscriber (not author) )  add link in the begining of Current page
+my realisation)
+	author) get error, not add link
+	subscriber (not author) )  add link in the end of Current page, limit of pageSize is Violated
+
 
 optimize rerender
 React.memo( function() )

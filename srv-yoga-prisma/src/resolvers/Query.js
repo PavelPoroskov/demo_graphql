@@ -12,7 +12,7 @@ async function feed(parent, args, context, info) {
 
   const awLinks = context.prisma.links({
     where,
-    after: args.after, 
+    skip: args.skip, 
     first: args.first,
     orderBy: args.orderBy,
   })

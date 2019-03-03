@@ -55,7 +55,9 @@ function App() {
             <ErrorBoundary>
               <Switch>
                 <Route exact path='/page/:page' component={LinkList}/>
+                {/*
                 <Route exact path='/top' component={LinkList}/>
+                */}
                 <Route exact path='/search' component={Search}/>
                 <Route exact path='/login' component={Login}/>
                 <PrivateRoute exact path='/create' component={CreateLink}/>

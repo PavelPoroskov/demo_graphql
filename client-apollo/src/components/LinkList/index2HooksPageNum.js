@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React from 'react'
 import gql from 'graphql-tag'
 import { withApollo } from 'react-apollo'
 
@@ -9,8 +9,8 @@ import LinkListView from './View'
 const LINKS_PER_PAGE = 2
 
 export const FEED_QUERY = gql`
-  query FeedQuery($first: Int, $after: String, $orderBy: LinkOrderByInput) {
-    feed(first: $first, after: $after, orderBy: $orderBy) {
+  query FeedQuery($first: Int, $skip: Int, $after: String, $orderBy: LinkOrderByInput) {
+    feed(first: $first, skip: $skip, after: $after, orderBy: $orderBy) {
       links {
         id
         createdAt
@@ -139,11 +139,15 @@ const LinkList = (props) => {
         query: NEW_LINKS_SUBSCRIPTION,
         //need fnToCache(), result = {data:{ newLink: {id,...} }
         fnToCache: result => {
-          // console.log('fnToChache')
-          // console.log(props)
+          //--
+          //on curren page (not only last page), page size=2 with two links add third page
+          console.log('fnToChache NEW_LINKS_SUBSCRIPTION')
+          console.log(queryVariables)
           const data = props.client.readQuery({ query: FEED_QUERY, variables: queryVariables })
 
+          console.log(data)
           data.feed.links.push(result.data.newLink)
+          console.log('after')
 
           props.client.writeQuery({ query: FEED_QUERY, data, variables: queryVariables })
         }
@@ -155,14 +159,14 @@ const LinkList = (props) => {
     if (propsLoading.data) {
       if (nPage*LINKS_PER_PAGE < propsLoading.data.count) {
         const nextPage = nPage + 1
-        this.props.history.push(`/page/${nextPage}`)
+        props.history.push(`/page/${nextPage}`)
       }
     }
   }
   const _previousPage = () => {
     if (1 < nPage) {
       const previousPage = nPage - 1
-      this.props.history.push(`/page/${previousPage}`)
+      props.history.push(`/page/${previousPage}`)
     }
   }
 
