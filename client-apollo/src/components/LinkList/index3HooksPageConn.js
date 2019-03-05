@@ -6,11 +6,11 @@ import { useEffectApolloQuery } from './react-apollo-hooks'
 
 import LinkListView from './View'
 
-const LINKS_PER_PAGE = 2
+import { LINKS_PER_PAGE } from '../../utils'
 
 export const FEED_QUERY = gql`
   query FeedQuery($first: Int, $after: String, $last: Int, $before: String, $orderBy: LinkOrderByInput) {
-    feedConnection(first: $first, after: $after, last: $last, before: $before, orderBy: $orderBy) {
+    feedConnection(first: $first, after: $after, last: $last, before: $before, orderBy: $orderBy) @connection(key: "LinkList_allLinks") {
       edges {
         node {
           id
@@ -131,7 +131,7 @@ const LinkList = (props) => {
   //const nPage = parseInt(props.match.params.page, 10)
   let queryVariables = {
     //skip: (iPage - 1) * LINKS_PER_PAGE,
-    orderBy: 'createdAt_ASC'
+    orderBy: 'createdAt_DESC'
   }
   if (isForward) {
     queryVariables['first'] = LINKS_PER_PAGE

@@ -17,4 +17,5 @@ export const AppContext = React.createContext({
   	
   },
 //  client: {},
+  cursor: {}, // { forward: true, cursor: null }
 });

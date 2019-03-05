@@ -42,6 +42,8 @@ const useEffectApolloQuery = ( client, _FEED_QUERY, variables={}, fnGetData, _ar
       // firstPage (use net), nextPage (use net), prevPage (dont use net), nextPage (dont use net)
       console.log('watchQuery subscribe')
       refObservableMain.current = client.watchQuery({
+        //pageNum pagination
+        //fetchPolicy: 'cache-and-network',
         query: _FEED_QUERY,
         variables
       })
@@ -77,15 +79,28 @@ const useEffectApolloQuery = ( client, _FEED_QUERY, variables={}, fnGetData, _ar
                 query: subscribtion.query,
                 variables
               })
+              // let breakFor = false
               const subscriptionSlave = obserableSub.subscribe(
                 resultNextSub => {
-                  // console.log('Subscription level 2: next')
-                  // console.log(resultNextSub)
+                  //pageNum pagination, not need
+                  // if (subscribtion.refetchMain) {
+                  //   breakFor = true;
+                  //   if (refObsvSubsriptions.current && Array.isArray(refObsvSubsriptions.current) ) {
+                  //     for (let obsvSubscription of refObsvSubsriptions.current) {
+                  //       obsvSubscription.unsubscribe()
+                  //     }
+                  //   }
+                  //   asyncFunction()
+                  // }
+
                   if (subscribtion.fnToCache) {
                     subscribtion.fnToCache(resultNextSub)
                   }
                 }
               )
+              // if (breakFor) {
+              //   break
+              // }
               refObsvSubsriptions.current.push(subscriptionSlave)
             }
           } 

@@ -2,8 +2,11 @@ import React, { useState } from 'react';
 
 export default function CreateLinkView(props) {
 
-  const [description, setDescription] = useState('')
-  const [url, setUrl] = useState('')
+  const [description, setDescription] = useState( () => {
+    const d = new Date()
+    return d.toLocaleTimeString('en-US') + ' ' + d.toLocaleDateString('en-US')
+  })
+  const [url, setUrl] = useState('.')
 
   return (
     <div>

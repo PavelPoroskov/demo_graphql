@@ -1,3 +1,20 @@
+03/05/2019
+next cursor paginations with @connection in query, update after mutation, update after subscribtion
+
+decision: pagination with pageNum (skip:int, first: int) not compatible with subscriptionNewLink/createLink
+	compatible only if fetchPolicy='cache-and-network'
+
+tutorial for react-apollo dont use "fetchMore" for pagination: <Query > (data, fetchMore) => {} 
+
+tutorial) 
+	author) add link in the begining of first page, limit of pageSize is not violated
+	first page refetch from server
+	second page dont chage, dont refetch, get from cache
+	
+	after add new item in the beginning of first page
+	 item from bottom first page vanished
+	 (not be in first page, not be in second page) 
+
 03/03/2019 ?? subscibtion (new link) && pagination
 tutorial) 
 	author) add link in the begining of first page, limit of pageSize is not violated

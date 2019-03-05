@@ -6,8 +6,10 @@ import { useEffectApolloQuery } from './react-apollo-hooks'
 
 import LinkListView from './View'
 
-const LINKS_PER_PAGE = 2
+import { LINKS_PER_PAGE } from '../../utils'
 
+//    feed(first: $first, skip: $skip, after: $after, orderBy: $orderBy) @connection(key: "LinkList_allLinks") {
+// if add @connection(key: "LinkList_allLinks"), then next page show data from first page
 export const FEED_QUERY = gql`
   query FeedQuery($first: Int, $skip: Int, $after: String, $orderBy: LinkOrderByInput) {
     feed(first: $first, skip: $skip, after: $after, orderBy: $orderBy) {
@@ -118,9 +120,9 @@ const LinkList = (props) => {
   const nPage = parseInt(props.match.params.page, 10)
   const iTotal = (nPage - 1)*LINKS_PER_PAGE
   let queryVariables = {
-    skip: (nPage - 1) * LINKS_PER_PAGE,
+    orderBy: 'createdAt_DESC',
     first: LINKS_PER_PAGE,
-    orderBy: 'createdAt_ASC'
+    skip: (nPage - 1) * LINKS_PER_PAGE,
   }
 
   //{ loading, error, data } = 
@@ -131,26 +133,30 @@ const LinkList = (props) => {
     [ 
       {
         query: NEW_VOTES_SUBSCRIPTION
-        //fnToChache
+        //fnToCache
         //dont need fnToCache(). Perhaps result = {data: {newVote: {link: {id, votes}}}}
         // link: {id, votes} go to cache auto?
       },
       {
         query: NEW_LINKS_SUBSCRIPTION,
+        refetchMain: true,
         //need fnToCache(), result = {data:{ newLink: {id,...} }
         fnToCache: result => {
           //--
           //on curren page (not only last page), page size=2 with two links add third page
           console.log('fnToChache NEW_LINKS_SUBSCRIPTION')
-          console.log(queryVariables)
-          const data = props.client.readQuery({ query: FEED_QUERY, variables: queryVariables })
+          //console.log(queryVariables)
+          let variables = { ...queryVariables, skip: 0 } 
+          const data = props.client.readQuery({ query: FEED_QUERY, variables })
 
-          console.log(data)
-          data.feed.links.push(result.data.newLink)
+          //console.log(data)
+          data.feed.links.unshift(result.data.newLink)
+
+          props.client.writeQuery({ query: FEED_QUERY, data, variables })
           console.log('after')
-
-          props.client.writeQuery({ query: FEED_QUERY, data, variables: queryVariables })
         }
+
+        //after: refetch page
       },
     ] 
   )

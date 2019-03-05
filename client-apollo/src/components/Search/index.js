@@ -37,7 +37,7 @@ function Search(props) {
       const result = await props.client.query({
         query: FEED_SEARCH_QUERY,
         variables: { filter },
-        orderBy: 'createdAt_ASC'
+        orderBy: 'createdAt_DESC'
       })
       if (result.errors) {
         console.log(result.errors)
