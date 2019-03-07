@@ -7,6 +7,7 @@ import { useEffectApolloConnection } from './react-apollo-hooks'
 import LinkListView from './View'
 
 import { LINKS_PER_PAGE } from '../../utils'
+//import netclient from '../../App/netclient'
 
 export const FEED_QUERY = gql`
   query FeedQuery($first: Int, $after: String, $last: Int, $before: String, $orderBy: LinkOrderByInput) {
@@ -98,16 +99,23 @@ const hocWaitResult = (Component) => (props) => {
   //const { loading, error, ...rest } = props
 
   if (loading) {
-    //console.log(`hocWaitResult: loading`)
+    console.log(`hocWaitResult: loading`)
     return <div>Loading...</div>
   }
   if (error) {
-    //console.log(`hocWaitResult: error`)
+    console.log(`hocWaitResult: error`)
     return <div>{`Error: ${error}`}</div>
   }
 
   if (data) {
-    //console.log(`hocWaitResult: result`)
+    console.log(`hocWaitResult: result`)
+    console.log(data)
+    //blink
+    // hocWaitResult: result
+    // []
+    // hocWaitResult: result
+    // [{…}, {…}, {…}]
+
     return <Component data={data} {...rest}/>
   }
 
@@ -126,13 +134,17 @@ const LinkList = (props) => {
   //const [cursorBefore, setCursorBefore] = useState(null)
   const [isForward, setIsForward] = useState(true)
 
+  const refPrevPageIndex = useRef(0)
   const refPageIndex = useRef(0)
+  //const [refPageIndex.current, setPageIndex] = useState(0)
   const refPrevCursorAfter = useRef([null])
 
   //const nPage = parseInt(props.match.params.page, 10)
   let queryVariables = {
     //skip: (iPage - 1) * LINKS_PER_PAGE,
-    orderBy: 'createdAt_DESC'
+    orderBy: 'createdAt_DESC',
+    first: LINKS_PER_PAGE,
+    after: cursorAfter
   }
   // if (isForward) {
   //   queryVariables['first'] = LINKS_PER_PAGE
@@ -141,8 +153,6 @@ const LinkList = (props) => {
   //   queryVariables['last'] = LINKS_PER_PAGE
   //   queryVariables['before'] = cursorBefore
   // }
-  queryVariables['first'] = LINKS_PER_PAGE
-  queryVariables['after'] = cursorAfter
 
   //{ loading, error, data } = 
   const propsLoading = useEffectApolloConnection( props.client, FEED_QUERY, 
@@ -153,18 +163,21 @@ const LinkList = (props) => {
   const _nextPage = () => {
     if (propsLoading.data) {
       const pgi = propsLoading.data.pageInfo
-      if ((isForward && pgi.hasNextPage) || !isForward ) {
+//      if ((isForward && pgi.hasNextPage) || !isForward ) {
+      if ((isForward && pgi.hasNextPage) || (refPageIndex.current < refPrevCursorAfter.current.length-1) ) {
         setIsForward(true)
-        setCursorAfter(pgi.endCursor)
-        //setCursorBefore(null)
+        refPrevPageIndex.current = refPageIndex.current
         refPageIndex.current = refPageIndex.current + 1
-        refPrevCursorAfter.current.push(pgi.endCursor)
+
+        if (refPrevCursorAfter.current.length <= refPageIndex.current ) {
+          refPrevCursorAfter.current.push(pgi.endCursor)
+        }
+        setCursorAfter(refPrevCursorAfter.current[refPageIndex.current])
+
+        console.log('nextPage')
+        // console.log(refPrevCursorAfter.current)
       }
     }
-    // let ar = propsLoading.data
-    // if (ar && Array.isArray(ar) && 0 < ar.length) {
-    //   setAfter(ar[ar.length-1].id)
-    // }
   }
   const _previousPage = () => {
     if (propsLoading.data) {
@@ -178,11 +191,17 @@ const LinkList = (props) => {
         // setCursorAfter(null)
         // setCursorBefore(pgi.startCursor)
 
-        let prevCursor = refPrevCursorAfter.current.pop()
-        prevCursor = refPrevCursorAfter.current.slice(-1)[0]
-        setCursorAfter(prevCursor)
+        // let prevCursor = refPrevCursorAfter.current.pop()
+        // prevCursor = refPrevCursorAfter.current.slice(-1)[0]
 
+        refPrevPageIndex.current = refPageIndex.current
         refPageIndex.current = refPageIndex.current - 1
+        setCursorAfter(refPrevCursorAfter.current[refPageIndex.current])
+
+        // console.log('prevPage')
+        // console.log(refPrevCursorAfter.current)
+
+        //setPageIndex(refPageIndex.current - 1)
       }
     }
     // if (1 < nPage) {
@@ -194,6 +213,27 @@ const LinkList = (props) => {
   let newData = null
   if (propsLoading.data) {
     newData = propsLoading.data.edges.map( o => o.node )
+    //const rest = newData.length % LINKS_PER_PAGE
+    //newData = newData.slice( rest ? -rest: -LINKS_PER_PAGE )
+
+    //-- blinks on render for new batch
+    //newData = newData.slice( refPageIndex.current*LINKS_PER_PAGE, (refPageIndex.current + 1)*LINKS_PER_PAGE )
+
+    // console.log('refPageIndex.current')
+    // console.log(refPageIndex.current)
+    if (newData.length -1 < refPageIndex.current*LINKS_PER_PAGE) {
+      // console.log('newData.slice prev')
+      newData = newData.slice( refPrevPageIndex.current*LINKS_PER_PAGE, (refPrevPageIndex.current + 1)*LINKS_PER_PAGE )
+    }else{
+      // console.log('newData.slice cur')
+      // console.log(newData.length)
+      // console.log(refPageIndex.current*LINKS_PER_PAGE)
+      newData = newData.slice( refPageIndex.current*LINKS_PER_PAGE, (refPageIndex.current + 1)*LINKS_PER_PAGE )
+    }
+
+    // console.log('newData.slice')
+    // console.log(propsLoading.data)
+    // console.log(newData)
   }
   const iTotal = refPageIndex.current*LINKS_PER_PAGE
 
@@ -213,6 +253,7 @@ const LinkList = (props) => {
 }
 
 export default withApollo(LinkList)
+//export default LinkList
 
 //experience: pagination
 //)load first page with first=2, after=null

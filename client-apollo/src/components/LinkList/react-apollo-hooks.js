@@ -40,7 +40,7 @@ const useEffectApolloQuery = ( client, _FEED_QUERY, variables={}, fnGetData, _ar
       }
       // op) always client.watchQuery, not refetch
       // firstPage (use net), nextPage (use net), prevPage (dont use net), nextPage (dont use net)
-      console.log('watchQuery subscribe')
+      // console.log('watchQuery subscribe')
       refObservableMain.current = client.watchQuery({
         //pageNum pagination
         //fetchPolicy: 'cache-and-network',
@@ -53,8 +53,8 @@ const useEffectApolloQuery = ( client, _FEED_QUERY, variables={}, fnGetData, _ar
           if (resultNext.networkStatus !==7) {
             return
           }
-          console.log(`watchQuery: next()`)
-          console.log(resultNext)
+          // console.log(`watchQuery: next()`)
+          // console.log(resultNext)
 
           let newData = resultNext
           if (fnGetData) {
@@ -74,7 +74,7 @@ const useEffectApolloQuery = ( client, _FEED_QUERY, variables={}, fnGetData, _ar
 
           if (Array.isArray(_arSubscriptions) && refObsvSubsriptions.current.length === 1) {
             for (let subscribtion of _arSubscriptions) {
-              console.log('Subscription level 2: begin')
+              // console.log('Subscription level 2: begin')
               const obserableSub = client.subscribe({
                 query: subscribtion.query,
                 variables
@@ -125,12 +125,12 @@ const useEffectApolloQuery = ( client, _FEED_QUERY, variables={}, fnGetData, _ar
 
   useEffect( () => {
 
-    console.log('react-apollo-hooks.js / useEffect')
+    // console.log('react-apollo-hooks.js / useEffect')
 
     asyncFunction()
 
     return () => {
-      console.log('watchQuery unsubscribe')
+      // console.log('watchQuery unsubscribe')
       if (refObsvSubsriptions.current && Array.isArray(refObsvSubsriptions.current) ) {
         for (let obsvSubscription of refObsvSubsriptions.current) {
           //console.log('UNsubscribe')
@@ -162,7 +162,7 @@ const useEffectApolloQuery = ( client, _FEED_QUERY, variables={}, fnGetData, _ar
 }
 
 
-const useEffectApolloConnection = ( client, _FEED_QUERY, variables={}, fnGetData ) => {
+const useEffectApolloConnection = ( client, query, variables={}, fnGetData ) => {
 
   const [data, setData] = useState(undefined)
   const [error, setError] = useState(undefined)
@@ -183,79 +183,94 @@ const useEffectApolloConnection = ( client, _FEED_QUERY, variables={}, fnGetData
   async function asyncFunction() {
     try {
       const strVaribles = varibles2String(variables)
+      const isQueryCached = strVaribles in refCacheVariables.current
+
+      // console.log(`refCacheVariables: begin`)
+      refCacheVariables.current[strVaribles] = true
+      // console.log(`refCacheVariables: end`)
+
       if (!refObservableMain.current) {
         setLoading(true)
       }
-      let options = {
-        query: _FEED_QUERY,
-        variables
-      }
-      if (!(strVaribles in refCacheVariables.current)) {
-        options['fetchPolicy'] = 'network-only'
-      }
-      console.log('watchQuery subscribe')
-      console.log(options)
 
-      let prevData = {}
-      try {
-        prevData = client.readQuery({ query: _FEED_QUERY })
-      }catch (er){
+      if (!refObservableMain.current) {
+        refObservableMain.current = client.watchQuery({ query, variables })
 
-      }
+        // console.log('watchQuery subscribe')
+        refMainSubscription.current = refObservableMain.current.subscribe(
+          resultNext => {
+            // console.log(`watchQuery: next()`)
+            // console.log(resultNext)
 
-      refObservableMain.current = client.watchQuery(options)
-      refCacheVariables.current[strVaribles] = true
+            let newData = resultNext
+            if (fnGetData) {
+              newData = fnGetData(resultNext)
+              if (Array.isArray(newData)) {
+                // //newData = [ ...newData ]
+                newData = newData.slice( )
 
-      refMainSubscription.current = refObservableMain.current.subscribe(
-        resultNext => {
-          console.log(`watchQuery: next()`)
-          console.log(resultNext)
+                // const rest = newData.length % variables.first
+                // newData = newData.slice( rest ? -rest: -variables.first )
 
-          let newData = resultNext
-          if (fnGetData) {
-            newData = fnGetData(resultNext)
-            if (Array.isArray(newData)) {
-              //newData = [ ...newData ]
-              newData = newData.slice( )
-            }else if ((!!newData) && (newData.constructor === Object)) {
-              //newData = { ...newData0 }
-              newData = Object.assign( {}, newData )
+              }else if ((!!newData) && (newData.constructor === Object)) {
+                //newData = { ...newData0 }
+                newData = Object.assign( {}, newData )
+              }
             }
+
+            // console.log(`watchQuery: setData()`)
+            setData( newData ) 
+            setError(undefined)
+            setLoading(false)
+            // console.log(`watchQuery: setData() end`)
+          },
+          err => {
+            setError(err)
+            setLoading(false)
+          },
+          () => {
+            //console.log('watchQuery finished')
           }
+        )
 
-          if (resultNext.networkStatus ===7) {
-            // const data = client.readQuery({ query: _FEED_QUERY })
-            // console.log('store.readQuery data')
-            // console.log(data)
+      }else{
 
-            // data.feed.links.unshift(result.data.post)
-            // //data.feed.links.push(result.data.post)
-            const currData = resultNext.data
+        let prevData = client.readQuery({ query })
+
+        let options = { query, variables }
+        if (!isQueryCached) {
+//          options['fetchPolicy'] = 'network-only'
+          options['fetchPolicy'] = 'no-cache'
+        }else {
+          return
+        }
+
+        try {
+          console.log('client.query')
+          const result = await client.query(options)
+
+          if (result.networkStatus ===7) {
+            const currData = result.data
 
             if (prevData.feedConnection) {
 
-              let feedConnection = Object.assign( {}, currData.feedConnection, {
-                edges: [...prevData.feedConnection.edges, ...currData.feedConnection.edges] 
-              })
+              currData.feedConnection.edges = prevData.feedConnection.edges.concat(currData.feedConnection.edges)
+              // let feedConnection = Object.assign( {}, currData.feedConnection, {
+              //   edges: [...prevData.feedConnection.edges, ...currData.feedConnection.edges ] 
+              // })
               client.writeQuery({ 
-                query: _FEED_QUERY, 
-                data: { feedConnection }
+                query, 
+                data: { feedConnection: currData.feedConnection }
               })
+              console.log('client.query end')
+              //console.log(result)
             }
           }
+        }catch(er) {
 
-          setData( newData ) 
-          setError(undefined)
-          setLoading(false)
-        },
-        err => {
-          setError(err)
-          setLoading(false)
-        },
-        () => {
-          //console.log('watchQuery finished')
         }
-      )
+        
+      }
 
     }catch (e) {
 
@@ -266,18 +281,21 @@ const useEffectApolloConnection = ( client, _FEED_QUERY, variables={}, fnGetData
 
   useEffect( () => {
 
-    console.log('react-apollo-hooks.js / useEffectApolloConnection')
+    //console.log('react-apollo-hooks.js / useEffectApolloConnection')
 
     asyncFunction()
 
+  }, Object.keys(variables).map( key => variables[key] ) )
+
+  useEffect( () => {
+
     return () => {
-      console.log('watchQuery unsubscribe')
+      // console.log('watchQuery unsubscribe')
       if (refMainSubscription.current) {
         refMainSubscription.current.unsubscribe()
       }
     }
-  }, Object.keys(variables).map( key => variables[key] ) )
-
+  }, [] )
 
   // //graphql subscriptions
   // useEffect( () => {

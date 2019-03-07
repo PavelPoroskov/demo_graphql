@@ -54,14 +54,18 @@ function App() {
             <div className='ph3 pv1 background-gray'>
             <ErrorBoundary>
               <Switch>
-                <Route exact path='/page/:page' component={LinkList}/>
+                <Route exact path='/' component={LinkList}/>
                 {/*
                 <Route exact path='/top' component={LinkList}/>
                 */}
                 <Route exact path='/search' component={Search}/>
                 <Route exact path='/login' component={Login}/>
                 <PrivateRoute exact path='/create' component={CreateLink}/>
+                {/*
+                <Route exact path='/page/:page' component={LinkList}/>
                 <Redirect to='/page/1'/>
+                */}
+                <Redirect to='/'/>
               </Switch>
             </ErrorBoundary>
             </div>
