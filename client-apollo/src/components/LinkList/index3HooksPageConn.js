@@ -1,8 +1,8 @@
-import React, {useState} from 'react'
+import React, {useState, useRef} from 'react'
 import gql from 'graphql-tag'
 import { withApollo } from 'react-apollo'
 
-import { useEffectApolloQuery } from './react-apollo-hooks'
+import { useEffectApolloConnection } from './react-apollo-hooks'
 
 import LinkListView from './View'
 
@@ -10,7 +10,7 @@ import { LINKS_PER_PAGE } from '../../utils'
 
 export const FEED_QUERY = gql`
   query FeedQuery($first: Int, $after: String, $last: Int, $before: String, $orderBy: LinkOrderByInput) {
-    feedConnection(first: $first, after: $after, last: $last, before: $before, orderBy: $orderBy) @connection(key: "LinkList_allLinks") {
+    feedConnection(first: $first, after: $after, last: $last, before: $before, orderBy: $orderBy) @connection(key: "feed") {
       edges {
         node {
           id
@@ -120,62 +120,45 @@ const EnhancedLinkListView = hocWaitResult(LinkListView)
 
 //https://www.apollographql.com/docs/react/api/apollo-client.html#ApolloClient.subscribe
 
-let nPage = 1
-
 const LinkList = (props) => {
   
   const [cursorAfter, setCursorAfter] = useState(null)
-  const [cursorBefore, setCursorBefore] = useState(null)
+  //const [cursorBefore, setCursorBefore] = useState(null)
   const [isForward, setIsForward] = useState(true)
+
+  const refPageIndex = useRef(0)
+  const refPrevCursorAfter = useRef([null])
 
   //const nPage = parseInt(props.match.params.page, 10)
   let queryVariables = {
     //skip: (iPage - 1) * LINKS_PER_PAGE,
     orderBy: 'createdAt_DESC'
   }
-  if (isForward) {
-    queryVariables['first'] = LINKS_PER_PAGE
-    queryVariables['after'] = cursorAfter
-  } else {
-    queryVariables['last'] = LINKS_PER_PAGE
-    queryVariables['before'] = cursorBefore
-  }
+  // if (isForward) {
+  //   queryVariables['first'] = LINKS_PER_PAGE
+  //   queryVariables['after'] = cursorAfter
+  // } else {
+  //   queryVariables['last'] = LINKS_PER_PAGE
+  //   queryVariables['before'] = cursorBefore
+  // }
+  queryVariables['first'] = LINKS_PER_PAGE
+  queryVariables['after'] = cursorAfter
 
   //{ loading, error, data } = 
-  const propsLoading = useEffectApolloQuery( props.client, FEED_QUERY, 
+  const propsLoading = useEffectApolloConnection( props.client, FEED_QUERY, 
     queryVariables, 
-    (result) => result.data.feedConnection, 
-    [ 
-      // {
-      //   query: NEW_VOTES_SUBSCRIPTION
-      //   //fnToChache
-      //   //dont need fnToCache(). Perhaps result = {data: {newVote: {link: {id, votes}}}}
-      //   // link: {id, votes} go to cache auto?
-      // },
-      // {
-      //   query: NEW_LINKS_SUBSCRIPTION,
-      //   //need fnToCache(), result = {data:{ newLink: {id,...} }
-      //   fnToCache: result => {
-      //     // console.log('fnToChache')
-      //     // console.log(props)
-      //     const data = props.client.readQuery({ query: FEED_QUERY, variables: queryVariables })
-
-      //     data.feed.links.push(result.data.newLink)
-
-      //     props.client.writeQuery({ query: FEED_QUERY, data, variables: queryVariables })
-      //   }
-      // },
-    ] 
+    (result) => result.data.feedConnection
   )
 
   const _nextPage = () => {
     if (propsLoading.data) {
       const pgi = propsLoading.data.pageInfo
-      if (pgi.hasNextPage) {
+      if ((isForward && pgi.hasNextPage) || !isForward ) {
         setIsForward(true)
         setCursorAfter(pgi.endCursor)
-        setCursorBefore(null)
-        nPage = nPage + 1
+        //setCursorBefore(null)
+        refPageIndex.current = refPageIndex.current + 1
+        refPrevCursorAfter.current.push(pgi.endCursor)
       }
     }
     // let ar = propsLoading.data
@@ -185,13 +168,21 @@ const LinkList = (props) => {
   }
   const _previousPage = () => {
     if (propsLoading.data) {
-      const pgi = propsLoading.data.pageInfo
+//      const pgi = propsLoading.data.pageInfo
 //      if (data.hasPreviousPage) {
-      if (1 < nPage || pgi.hasPreviousPage) {
+//      if (1 < nPage || pgi.hasPreviousPage) {
+//      if ((!isForward && pgi.hasPreviousPage) || (isForward && 0 < refPageIndex.current) ) {
+      if (0 < refPageIndex.current) {
         setIsForward(false)
-        setCursorAfter(null)
-        setCursorBefore(pgi.startCursor)
-        nPage = nPage - 1
+
+        // setCursorAfter(null)
+        // setCursorBefore(pgi.startCursor)
+
+        let prevCursor = refPrevCursorAfter.current.pop()
+        prevCursor = refPrevCursorAfter.current.slice(-1)[0]
+        setCursorAfter(prevCursor)
+
+        refPageIndex.current = refPageIndex.current - 1
       }
     }
     // if (1 < nPage) {
@@ -204,7 +195,7 @@ const LinkList = (props) => {
   if (propsLoading.data) {
     newData = propsLoading.data.edges.map( o => o.node )
   }
-  const iTotal = (nPage - 1)*LINKS_PER_PAGE
+  const iTotal = refPageIndex.current*LINKS_PER_PAGE
 
   return (
     <React.Fragment >
