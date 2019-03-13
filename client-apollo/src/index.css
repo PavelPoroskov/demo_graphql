@@ -57,3 +57,13 @@ input {
   cursor: pointer;
   max-width: 250px;
 }
+
+.navlink {
+  cursor: not-allowed;
+  color: #828282;
+}
+
+.navlink_available {
+  color: black;
+  cursor: pointer;
+}

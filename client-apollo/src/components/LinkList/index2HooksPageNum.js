@@ -2,7 +2,7 @@ import React from 'react'
 import gql from 'graphql-tag'
 import { withApollo } from 'react-apollo'
 
-import { useEffectApolloQuery } from './react-apollo-hooks'
+import { useEffectQuery } from '../../react-apollo-hooks'
 
 import LinkListView from './View'
 
@@ -126,7 +126,7 @@ const LinkList = (props) => {
   }
 
   //{ loading, error, data } = 
-  const propsLoading = useEffectApolloQuery( props.client, FEED_QUERY, 
+  const propsLoading = useEffectQuery( props.client, FEED_QUERY, 
     queryVariables, 
 //    (result) => result.data.feed.links, 
     (result) => result.data.feed, 

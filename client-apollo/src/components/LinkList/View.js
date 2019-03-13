@@ -5,7 +5,7 @@ import Link from '../Link'
 
 const LinkListView = (props) => {
 
-  // console.log(`LinkListView`)
+  //console.log(`LinkListView`)
   // console.log(props)
   let iTotal = props.iTotal || 0
 

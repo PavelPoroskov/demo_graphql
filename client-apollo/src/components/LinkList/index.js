@@ -3,8 +3,10 @@
 
 // in this option dont rerender after store.writeQuery({ query: FEED_QUERY, data })
 // need use <Query />
-import LinkList, {FEED_QUERY} from './index3HooksPageConn.js'
 //import LinkList, {FEED_QUERY} from './index2HooksPageNum.js'
+//import LinkList, {FEED_QUERY} from './index3HooksPageConn.js'
+import LinkList, {FEED_QUERY} from './index4HooksPagination.js'
+
 
 export {
   FEED_QUERY
