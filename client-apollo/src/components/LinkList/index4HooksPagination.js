@@ -2,7 +2,7 @@ import React from 'react'
 import gql from 'graphql-tag'
 import { withApollo } from 'react-apollo'
 
-import { useEffectPagination } from '../../react-apollo-hooks'
+import { useEffectPagination, useEffectSubscription } from '../../react-apollo-hooks'
 
 import LinkListView from './View'
 
@@ -61,32 +61,35 @@ export const FEED_QUERY = gql`
 //   }
 // `
 
-// const NEW_VOTES_SUBSCRIPTION = gql`
-//   subscription {
-//     newVote {
-//       id
-//       link {
-//         id
-//         url
-//         description
-//         createdAt
-//         postedBy {
-//           id
-//           name
-//         }
-//         votes {
-//           id
-//           user {
-//             id
-//           }
-//         }
-//       }
-//       user {
-//         id
-//       }
-//     }
-//   }
-// `
+const NEW_VOTES_SUBSCRIPTION = gql`
+  subscription {
+    newVote {
+      id
+      link {
+        id
+        url
+        description
+        createdAt
+        postedBy {
+          id
+          name
+        }
+        votes {
+          id
+          user {
+            id
+          }
+        }
+      }
+      user {
+        id
+      }
+    }
+  }
+`
+
+//console.log('FEED_QUERY')
+//console.log(FEED_QUERY)
 
 const hocWaitResult = (Component) => (props) => {
   //-- blink on next page
@@ -130,12 +133,14 @@ const EnhancedLinkListView = hocWaitResult(LinkListView)
 
 const LinkList = (props) => {
   
-//  const fnGetArray = (result) => result.data.feedConnection.edges.map( o => o.node )
-  const fnGetArray = (result) => result.data.feedConnection
+//  const fnGetArray = (result) => result.data.feedConnection.edges
 
   const { hasPrevPage, goPrevPage, hasNextPage, goNextPage, totalBefore, ...rest } = useEffectPagination( props.client, FEED_QUERY, 
-    {orderBy: 'createdAt_DESC'}, fnGetArray, LINKS_PER_PAGE )
+    {orderBy: 'createdAt_DESC'}, LINKS_PER_PAGE )
+
+  useEffectSubscription( props.client, NEW_VOTES_SUBSCRIPTION )
   //rest = { loading, data, error }
+
 
   return (
     <React.Fragment >
@@ -153,6 +158,3 @@ const LinkList = (props) => {
 }
 
 export default withApollo(LinkList)
-
-//todo
-//fnGetArray: auto or give

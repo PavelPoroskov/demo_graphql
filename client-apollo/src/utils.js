@@ -44,7 +44,7 @@ function timeDifferenceForDate(date) {
   return timeDifference(now, updated)
 }
 
-const LINKS_PER_PAGE = 3
+const LINKS_PER_PAGE = 10
 
 export {
   timeDifferenceForDate,

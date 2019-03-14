@@ -33,8 +33,11 @@ function commit( linkId ) {
       //console.log('CreateVote, update, start')
       const data = store.readQuery({ query: FEED_QUERY })
 
-      const votedLink = data.feed.links.find(link => link.id === linkId)
-      votedLink.votes = result.data.vote.link.votes
+      //const votedLink = data.feed.links.find(link => link.id === linkId)
+      //votedLink.votes = result.data.vote.link.votes
+      
+      const votedLink = data.feedConnection.edges.find(edge => edge.node.id === linkId)
+      votedLink.node.votes = result.data.vote.link.votes
 
       store.writeQuery({ query: FEED_QUERY, data })
       //console.log(data)

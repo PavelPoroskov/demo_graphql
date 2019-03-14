@@ -2,7 +2,7 @@ import {useState, useRef} from 'react'
 import useEffectConnection from './useEffectConnection'
 
 
-const useEffectPagination = ( client, query, variables={}, fnGetData, pageSize ) => {
+const useEffectPagination = ( client, query, variables={}, pageSize ) => {
 
   const [cursorAfter, setCursorAfter] = useState(null)
   //const [cursorBefore, setCursorBefore] = useState(null)
@@ -21,10 +21,7 @@ const useEffectPagination = ( client, query, variables={}, fnGetData, pageSize )
     after: cursorAfter
   }
 
-  const propsLoading = useEffectConnection( client, query, 
-    queryVariables, 
-    fnGetData
-  )
+  const propsLoading = useEffectConnection( client, query, queryVariables )
 
   const hasNextPage = () => {
     if (isForward && propsLoading.error) {
@@ -32,7 +29,7 @@ const useEffectPagination = ( client, query, variables={}, fnGetData, pageSize )
     }
 
     if (propsLoading.data) {
-      const pgi = propsLoading.data.pageInfo
+      const pgi = propsLoading.pageInfo
       if ((isForward && pgi.hasNextPage) || (refPageIndex.current < refPrevCursorAfter.current.length-1) ) {
         return true
       }
@@ -50,7 +47,7 @@ const useEffectPagination = ( client, query, variables={}, fnGetData, pageSize )
     refPageIndex.current = refPageIndex.current + 1
 
     if (refPrevCursorAfter.current.length <= refPageIndex.current ) {
-      const pgi = propsLoading.data.pageInfo
+      const pgi = propsLoading.pageInfo
       refPrevCursorAfter.current.push(pgi.endCursor)
     }
     setCursorAfter(refPrevCursorAfter.current[refPageIndex.current])
@@ -78,7 +75,9 @@ const useEffectPagination = ( client, query, variables={}, fnGetData, pageSize )
     }
 
     if (propsLoading.data) {
-      let newData = propsLoading.data.edges.map( o => o.node )
+      //todo-
+      //let newData = propsLoading.data.edges.map( o => o.node )
+      let newData = propsLoading.data
       // //incremental 
       // return newData
       

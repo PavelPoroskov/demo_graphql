@@ -2,9 +2,9 @@ import gql from 'graphql-tag'
 
 import netclient from '../App/netclient'
 
-import {FEED_QUERY} from '../components/LinkList'
+//import {FEED_QUERY} from '../components/LinkList'
 
-import {LINKS_PER_PAGE} from '../utils'
+//import {LINKS_PER_PAGE} from '../utils'
 
 const POST_MUTATION = gql`
   mutation PostMutation($description: String!, $url: String!) {
@@ -35,20 +35,22 @@ function commit( url, description ) {
       description,
     },
     update: (store, result) => {
-      //console.log('CreateLink, update, start')   
-      // must be: order of variables in query === here
-      const variables = {
-        orderBy: 'createdAt_DESC',
-        first: LINKS_PER_PAGE,
-        skip: 0,
-      }   
-      const data = store.readQuery({ query: FEED_QUERY, variables })
-      //-- get erros without variables for pagination {skip, first}
+      // //turn off: dont do with pagination
 
-      data.feed.links.unshift(result.data.post)
-      //data.feed.links.push(result.data.post)
+      // //console.log('CreateLink, update, start')   
+      // // must be: order of variables in query === here
+      // const variables = {
+      //   orderBy: 'createdAt_DESC',
+      //   first: LINKS_PER_PAGE,
+      //   skip: 0,
+      // }   
+      // const data = store.readQuery({ query: FEED_QUERY, variables })
+      // //-- get erros without variables for pagination {skip, first}
 
-      store.writeQuery({ query: FEED_QUERY, data, variables })
+      // data.feed.links.unshift(result.data.post)
+      // //data.feed.links.push(result.data.post)
+
+      // store.writeQuery({ query: FEED_QUERY, data, variables })
     }
   })
   // .then( () => {

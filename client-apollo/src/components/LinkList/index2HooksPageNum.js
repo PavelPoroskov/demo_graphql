@@ -129,7 +129,7 @@ const LinkList = (props) => {
   const propsLoading = useEffectQuery( props.client, FEED_QUERY, 
     queryVariables, 
 //    (result) => result.data.feed.links, 
-    (result) => result.data.feed, 
+    (data) => data.feed, 
     [ 
       {
         query: NEW_VOTES_SUBSCRIPTION
