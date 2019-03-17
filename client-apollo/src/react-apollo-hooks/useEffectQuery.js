@@ -26,16 +26,16 @@ const useEffectQuery = ( client, query, variables={}, fnGetData=(data)=>data ) =
           //   return
           // }
 
-          let newData = resultNext
+          let newData = resultNext.data
           if (fnGetData) {
             newData = fnGetData(resultNext.data)
-            if (Array.isArray(newData)) {
-              //newData = [ ...newData ]
-              newData = newData.slice( )
-            }else if ((!!newData) && (newData.constructor === Object)) {
-              //newData = { ...newData0 }
-              newData = Object.assign( {}, newData )
-            }
+          }
+          if (Array.isArray(newData)) {
+            //newData = [ ...newData ]
+            newData = newData.slice( )
+          }else if ((!!newData) && (newData.constructor === Object)) {
+            //newData = { ...newData0 }
+            newData = Object.assign( {}, newData )
           }
 
           setData( newData ) 

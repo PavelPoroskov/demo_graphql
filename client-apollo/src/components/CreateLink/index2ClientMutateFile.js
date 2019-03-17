@@ -1,5 +1,6 @@
 import React//, { useCallback } 
 from 'react'
+import { withApollo } from 'react-apollo'
 
 import CreateLinkView from './View'
 import CreateLinkMutation from '../../mutations/CreateLink'
@@ -13,7 +14,6 @@ import CreateLinkMutation from '../../mutations/CreateLink'
 //   }
 // }      
 
-export default 
 function CreateLin(props) {
 
   // const createLink = useCallback( async (url, description) => {
@@ -26,7 +26,7 @@ function CreateLin(props) {
   // }      
   // , [true] )
   const createLink = async (url, description) => {
-    let result = await CreateLinkMutation.commit( url, description )
+    let result = await CreateLinkMutation.commit( props.client, url, description )
     if (result.errors) {
       return
     }
@@ -37,3 +37,5 @@ function CreateLin(props) {
 
   return <CreateLinkView createLink={createLink} />
 }
+
+export default withApollo(CreateLin)

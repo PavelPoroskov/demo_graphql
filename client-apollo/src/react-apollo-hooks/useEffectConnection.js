@@ -110,9 +110,18 @@ const useEffectConnection = ( client, query, variables={} ) => {
   const fnGetPageInfo = (data) => getPath( data, refPahPageInfo.current )
   
   function varibles2String(obj) {
-    const arKeys = Object.keys(obj).sort()
-    const arValues = arKeys.map( key => `${key}=${obj[key]}`)
-    return arValues.join(';')
+
+    if (Array.isArray(obj)) {
+      let arStr = obj.map( i => varibles2String(i) ).join(',')
+      return `[${arStr}]`
+
+    }else if ((!!obj) && (obj.constructor === Object)) {
+      const arKeys = Object.keys(obj).sort()
+      const arStr = arKeys.map( key => `${key}=${varibles2String(obj[key])}`).join(',')
+      return `{${arStr}}`
+    }
+
+    return `${obj}`
   }
 
   async function asyncFunction() {

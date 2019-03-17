@@ -19,7 +19,7 @@ const useEffectSubscription = ( client, query, variables={}, fnToCache ) => {
           // console.log(resultNext)
           
           if (fnToCache) {
-            fnToCache(resultNext)
+            fnToCache(resultNext.data)
           }
         },
         err => {

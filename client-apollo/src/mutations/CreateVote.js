@@ -1,6 +1,6 @@
 import gql from 'graphql-tag'
 
-import netclient from '../App/netclient'
+//import netclient from '../App/netclient'
 
 import {FEED_QUERY} from '../components/LinkList'
 
@@ -23,8 +23,8 @@ const MUTATION = gql`
   }
 `
 
-function commit( linkId ) {
-  return netclient.client.mutate({
+function commit( client, linkId ) {
+  return client.mutate({
     mutation: MUTATION,
     variables: {
       linkId
@@ -58,18 +58,20 @@ function commit( linkId ) {
 
 //   return result
 // }
-const wrapErrorAsync = async ( ...rest) => {
-  let result = {}
+const wrapErrorAsync = (commit) => {
+  return async ( ...rest) => {
+    let result = {}
 
-  try {
-    result = await commit.apply( null, rest )
-  } catch (e) {
-    result['errors'] = e
+    try {
+      result = await commit.apply( null, rest )
+    } catch (e) {
+      result['errors'] = e
+    }
+
+    return result
   }
-
-  return result
 }
 
 export default {
-  commit: wrapErrorAsync
+  commit: wrapErrorAsync(commit)
 }

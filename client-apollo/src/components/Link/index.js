@@ -1,13 +1,12 @@
 import React, { useContext, /*useMemo,*/ useCallback } from 'react'
+import { withApollo } from 'react-apollo'
 
 import CreateVoteMutation from '../../mutations/CreateVote'
 import {AppContext} from '../../App/context';
 
 import LinkView from './View'
 
-
-export default 
-function Link(props) {
+function Link(props, _context) {
 
   const context = useContext(AppContext)
 
@@ -19,7 +18,7 @@ function Link(props) {
       return
     }
 
-    let result = await CreateVoteMutation.commit(props.data.id)
+    let result = await CreateVoteMutation.commit( props.client, props.data.id )
     if (result.errors) {
       // ui_callbackError(result.errors)
       // return
@@ -51,3 +50,5 @@ function Link(props) {
 
   return <LinkView userId={context.loggedUserId} voteForLink={voteForLink} data={memoizedProps} />
 }
+
+export default withApollo(Link)
