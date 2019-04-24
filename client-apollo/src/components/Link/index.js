@@ -1,14 +1,14 @@
-import React, { useContext, /*useMemo,*/ useCallback } from 'react'
+import React, { /*useMemo,*/ useCallback } from 'react'
 import { withApollo } from 'react-apollo'
 
 import CreateVoteMutation from '../../mutations/CreateVote'
-import {AppContext} from '../../App/context';
+import {useAuthContext} from '../../App/context';
 
 import LinkView from './View'
 
 function Link(props, _context) {
 
-  const context = useContext(AppContext)
+  const context = useAuthContext()
 
   const voteForLink = useCallback( async () => {
     //const userId = localStorage.getItem(GC_USER_ID)

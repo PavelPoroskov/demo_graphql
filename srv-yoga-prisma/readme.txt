@@ -1,6 +1,6 @@
 
 
-yarn add global prisma
+yarn global add prisma
 
 sudo docker-compose up -d
 

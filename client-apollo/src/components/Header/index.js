@@ -1,15 +1,15 @@
-import React, { useContext, useCallback } from 'react'
+import React, { useCallback } from 'react'
 import { withRouter } from 'react-router'
 
 import HeaderView from './View'
 
-import {AppContext} from '../../App/context';
+import {useAuthContext} from '../../App/context';
 
 //import { GC_USER_ID, GC_AUTH_TOKEN } from '../../constants'
 
 function Header(props) {
 
-  const context = useContext(AppContext)
+  const context = useAuthContext()
   const onLogout = useCallback( () => {
     context.logout()
     props.history.push(`/`)

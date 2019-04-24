@@ -1,7 +1,7 @@
-import React, { useContext } from 'react'
+import React from 'react'
 //import React from 'react'
 
-import {AppContext} from '../../App/context';
+import {useAuthContext} from '../../App/context';
 import LoginView from './View'
 
 import AuthenticateUserMutation from '../../mutations/AuthenticateUser'
@@ -11,7 +11,7 @@ import SignupUserMutation from '../../mutations/SignupUser'
 export default 
 function Login(props) {
 
-  const context = useContext(AppContext)
+  const context = useAuthContext()
 
   const cbLogin = async (login, email, password, name, ui_callbackError) => {
 
