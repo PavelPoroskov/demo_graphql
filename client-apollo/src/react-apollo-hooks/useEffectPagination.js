@@ -82,10 +82,10 @@ const useEffectPagination = ( client, query, variables={}, pageSize ) => {
       // return newData
       
       //pages
-      if (newData.length -1 < refPageIndex.current*pageSize) {
-        newData = newData.slice( refPrevPageIndex.current*pageSize, (refPrevPageIndex.current + 1)*pageSize )
-      }else{
+      if (refPageIndex.current*pageSize <= newData.length -1) {
         newData = newData.slice( refPageIndex.current*pageSize, (refPageIndex.current + 1)*pageSize )
+      }else{
+        newData = newData.slice( refPrevPageIndex.current*pageSize, (refPrevPageIndex.current + 1)*pageSize )
       }
 
       return newData
