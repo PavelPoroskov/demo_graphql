@@ -67,7 +67,7 @@ function Link(props) {
     postedByName: props.link.postedBy && props.link.postedBy.name,
     createdAt: props.link.createdAt,
     //linkId: props.link.id,
-  }), [props.link]);
+  }), [props.index, props.link]);
 
   return <LinkView userId={context.loggedUserId} voteForLink={voteForLink} {...memoizedProps} />
 }

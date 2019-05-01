@@ -70,6 +70,7 @@ const useEffectQuery = ( client, query, variables={}, fnGetData=(data)=>data ) =
         refSubsription.current.unsubscribe()
       }
     }
+  // eslint-disable-next-line 
   }, Object.keys(variables).map( key => variables[key] ) )
 
   return {

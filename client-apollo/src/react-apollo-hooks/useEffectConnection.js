@@ -99,7 +99,7 @@ const useEffectConnection = ( client, query, variables={} ) => {
     refPahPageInfo.current = pathPageInfo
     refPahItem.current = pathItem
 
-  }, query )
+  }, [query.definitions] )
 
   //const fnGetEdges = (data) => data.feedConnection.edges
   const fnGetEdges = (data) => getPath( data, refPahEdges.current )
@@ -236,6 +236,7 @@ const useEffectConnection = ( client, query, variables={} ) => {
 
     asyncFunction()
 
+  // eslint-disable-next-line 
   }, Object.keys(variables).map( key => variables[key] ) )
 
   useEffect( () => {

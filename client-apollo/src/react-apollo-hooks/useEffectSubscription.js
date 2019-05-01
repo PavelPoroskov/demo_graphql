@@ -47,6 +47,7 @@ const useEffectSubscription = ( client, query, variables={}, fnToCache ) => {
         refSubsription.current.unsubscribe()
       }
     }
+  // eslint-disable-next-line 
   }, Object.keys(variables).map( key => variables[key] ) )
 
 }

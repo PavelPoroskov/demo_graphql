@@ -10,6 +10,7 @@
 import type { ReaderFragment } from 'relay-runtime';
 import type { FragmentReference } from "relay-runtime";
 declare export opaque type Link_link$ref: FragmentReference;
+declare export opaque type Link_link$fragmentType: Link_link$ref;
 export type Link_link = {|
   +id: string,
   +description: ?string,
@@ -24,6 +25,11 @@ export type Link_link = {|
   |},
   +$refType: Link_link$ref,
 |};
+export type Link_link$data = Link_link;
+export type Link_link$key = {
+  +$data?: Link_link$data,
+  +$fragmentRefs: Link_link$ref,
+};
 */
 
 

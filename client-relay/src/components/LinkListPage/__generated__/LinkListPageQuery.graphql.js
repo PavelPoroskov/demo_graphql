@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 833c973a7c920f4b471b49baf0e4f3f0
+ * @relayHash c9137a073b35be11a36eadd1886b93fc
  */
 
 /* eslint-disable */
@@ -84,27 +84,25 @@ var v0 = [
     "defaultValue": null
   }
 ],
-v1 = [
-  {
-    "kind": "Variable",
-    "name": "after",
-    "variableName": "after",
-    "type": "String"
-  },
+v1 = {
+  "kind": "Variable",
+  "name": "after",
+  "variableName": "after"
+},
+v2 = [
+  (v1/*: any*/),
   {
     "kind": "Variable",
     "name": "first",
-    "variableName": "count",
-    "type": "Int"
+    "variableName": "count"
   },
   {
     "kind": "Literal",
     "name": "orderBy",
-    "value": "createdAt_ASC",
-    "type": "LinkOrderBy"
+    "value": "createdAt_ASC"
   }
 ],
-v2 = {
+v3 = {
   "kind": "ScalarField",
   "alias": null,
   "name": "id",
@@ -133,17 +131,11 @@ return {
             "kind": "FragmentSpread",
             "name": "LinkList_viewer",
             "args": [
-              {
-                "kind": "Variable",
-                "name": "after",
-                "variableName": "after",
-                "type": null
-              },
+              (v1/*: any*/),
               {
                 "kind": "Variable",
                 "name": "count",
-                "variableName": "count",
-                "type": null
+                "variableName": "count"
               }
             ]
           }
@@ -170,7 +162,7 @@ return {
             "alias": null,
             "name": "allLinks",
             "storageKey": null,
-            "args": (v1/*: any*/),
+            "args": (v2/*: any*/),
             "concreteType": "LinkConnection",
             "plural": false,
             "selections": [
@@ -192,7 +184,7 @@ return {
                     "concreteType": "Link",
                     "plural": false,
                     "selections": [
-                      (v2/*: any*/),
+                      (v3/*: any*/),
                       {
                         "kind": "ScalarField",
                         "alias": null,
@@ -223,7 +215,7 @@ return {
                         "concreteType": "User",
                         "plural": false,
                         "selections": [
-                          (v2/*: any*/),
+                          (v3/*: any*/),
                           {
                             "kind": "ScalarField",
                             "alias": null,
@@ -300,14 +292,14 @@ return {
             "kind": "LinkedHandle",
             "alias": null,
             "name": "allLinks",
-            "args": (v1/*: any*/),
+            "args": (v2/*: any*/),
             "handle": "connection",
             "key": "LinkList_allLinks",
             "filters": [
               "orderBy"
             ]
           },
-          (v2/*: any*/)
+          (v3/*: any*/)
         ]
       }
     ]

@@ -1,6 +1,6 @@
 /**
  * @flow
- * @relayHash 5ab38f8393b7d20c913f9d0a10b70b73
+ * @relayHash acbdb3507df3d45c16846370fe45c654
  */
 
 /* eslint-disable */
@@ -125,8 +125,7 @@ v2 = [
       {
         "kind": "Variable",
         "name": "input",
-        "variableName": "input",
-        "type": "CreateLinkInput!"
+        "variableName": "input"
       }
     ],
     "concreteType": "CreateLinkPayload",

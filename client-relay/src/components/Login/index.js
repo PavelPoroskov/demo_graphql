@@ -30,7 +30,7 @@ function Login(props) {
         props.history.push(`/`)
       })
     }      
-  }, [true] )
+  }, [context, props.history] )
 
   return <LoginView submit={cbLogin} />
 }

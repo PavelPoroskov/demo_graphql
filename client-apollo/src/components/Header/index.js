@@ -13,7 +13,7 @@ function Header(props) {
   const onLogout = useCallback( () => {
     context.logout()
     props.history.push(`/`)
-  }, [true] )
+  }, [context, props.history] )
 
   return <HeaderView userId={context.loggedUserId} logout={onLogout} />
 }

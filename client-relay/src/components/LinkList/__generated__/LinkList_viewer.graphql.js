@@ -11,6 +11,7 @@ import type { ReaderFragment } from 'relay-runtime';
 type Link_link$ref = any;
 import type { FragmentReference } from "relay-runtime";
 declare export opaque type LinkList_viewer$ref: FragmentReference;
+declare export opaque type LinkList_viewer$fragmentType: LinkList_viewer$ref;
 export type LinkList_viewer = {|
   +allLinks: {|
     +edges: ?$ReadOnlyArray<?{|
@@ -25,6 +26,11 @@ export type LinkList_viewer = {|
   |},
   +$refType: LinkList_viewer$ref,
 |};
+export type LinkList_viewer$data = LinkList_viewer;
+export type LinkList_viewer$key = {
+  +$data?: LinkList_viewer$data,
+  +$fragmentRefs: LinkList_viewer$ref,
+};
 */
 
 
@@ -68,8 +74,7 @@ const node/*: ReaderFragment*/ = {
         {
           "kind": "Literal",
           "name": "orderBy",
-          "value": "createdAt_ASC",
-          "type": "LinkOrderBy"
+          "value": "createdAt_ASC"
         }
       ],
       "concreteType": "LinkConnection",
@@ -94,16 +99,16 @@ const node/*: ReaderFragment*/ = {
               "plural": false,
               "selections": [
                 {
-                  "kind": "FragmentSpread",
-                  "name": "Link_link",
-                  "args": null
-                },
-                {
                   "kind": "ScalarField",
                   "alias": null,
                   "name": "__typename",
                   "args": null,
                   "storageKey": null
+                },
+                {
+                  "kind": "FragmentSpread",
+                  "name": "Link_link",
+                  "args": null
                 }
               ]
             },
