@@ -1,3 +1,16 @@
+
+18/05/2019
+https://facebook.github.io/create-react-app/docs/loading-graphql-files
+	import { loader } from 'graphql.macro';
+	const query = loader('./foo.graphql');
+loading grapql from file & naming requirement 
+	fragment Link_link on Link
+BUT https://facebook.github.io/create-react-app/docs/adding-relay use babel-plugin-relay@dev
+
+two or more QueryRenderer in app
+	?real web app/example
+
+
 03/05/2019
 next cursor paginations with @connection in query, update after mutation, update after subscribtion
 
