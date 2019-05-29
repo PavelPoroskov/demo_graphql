@@ -107,7 +107,9 @@ const useEffectPagination = ( client, query, variables={}, pageSize ) => {
   return {
     loading: propsLoading.loading,
     error: propsLoading.error,
-    data: getData(),
+    data: getData(), 
+    //dataAll,
+    //dataPage,
     hasPrevPage: hasPrevPage(), 
     goPrevPage, 
     hasNextPage: hasNextPage(), 
