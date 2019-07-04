@@ -8073,6 +8073,11 @@ rc@^1.2.7:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
+react-apollo-pagination@^1.0.10:
+  version "1.0.10"
+  resolved "https://registry.yarnpkg.com/react-apollo-pagination/-/react-apollo-pagination-1.0.10.tgz#8b7cecb3129d8a7fc7e9b94d7857a9a6c7f330ae"
+  integrity sha512-eLC7FztAC1FnsRj9STJpKsXW43GtWODruRWYMjxld4XnfoK4ICHA6w1ZwP+Afi9fvi+qVbvQ8J0MfU7c++AHnQ==
+
 react-apollo@^2.4.1:
   version "2.5.5"
   resolved "https://registry.yarnpkg.com/react-apollo/-/react-apollo-2.5.5.tgz#0f27079a8fa9d9ceea8b29a5977eb42885f88fb9"

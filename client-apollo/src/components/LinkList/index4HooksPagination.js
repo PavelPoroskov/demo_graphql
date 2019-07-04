@@ -2,7 +2,7 @@ import React from 'react'
 import gql from 'graphql-tag'
 import { withApollo } from 'react-apollo'
 
-import { useEffectPagination, useEffectSubscription } from '../../react-apollo-hooks'
+import { usePagination, useSubscription } from 'react-apollo-pagination'
 
 import LinkListView from './View'
 
@@ -101,10 +101,6 @@ const hocWaitResult = (Component) => (props) => {
   const { loading, error, data,  ...rest } = props
   //const { loading, error, ...rest } = props
 
-  if (loading) {
-    //console.log(`hocWaitResult: loading`)
-    return <div>Loading...</div>
-  }
   if (error) {
     //console.log(`hocWaitResult: error`)
     return <div>{`Error: ${error}`}</div>
@@ -121,6 +117,10 @@ const hocWaitResult = (Component) => (props) => {
 
     return <Component data={data} {...rest}/>
   }
+  if (loading) {
+    //console.log(`hocWaitResult: loading`)
+    return <div>Loading...</div>
+  }
 
   return null
   //return <Component {...rest}/>
@@ -135,12 +135,12 @@ const LinkList = (props) => {
   
 //  const fnGetArray = (result) => result.data.feedConnection.edges
 
-  const { hasPrevPage, goPrevPage, hasNextPage, goNextPage, totalBefore, ...rest } = useEffectPagination( props.client, FEED_QUERY, 
-    {orderBy: 'createdAt_DESC'}, LINKS_PER_PAGE )
+  const { hasPrevPage, goPrevPage, hasNextPage, goNextPage, pageNum, ...rest } = usePagination( props.client, { query: FEED_QUERY, 
+    variables: {orderBy: 'createdAt_DESC'} }, LINKS_PER_PAGE )
 
-  useEffectSubscription( props.client, NEW_VOTES_SUBSCRIPTION )
+  useSubscription( props.client, { query: NEW_VOTES_SUBSCRIPTION } )
   //rest = { loading, data, error }
-
+  const totalBefore = pageNum ? (pageNum - 1)*LINKS_PER_PAGE : 0
 
   return (
     <React.Fragment >

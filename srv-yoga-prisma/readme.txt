@@ -4,6 +4,7 @@ yarn global add prisma
 
 sudo docker-compose up -d
 
+//only first time
 cd database
 prisma deploy
 (choose local ...)
